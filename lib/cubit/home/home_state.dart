@@ -8,7 +8,7 @@ class HomeInitialState extends HomeState {}
 class HomeLoadingState extends HomeState {}
 
 class HomeSuccessState extends HomeState {
-  final HomeModel model;
+  final ProductsModel model;
 
   HomeSuccessState(this.model);
 }

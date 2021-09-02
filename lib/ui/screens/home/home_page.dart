@@ -26,11 +26,11 @@ class HomeScreen extends StatelessWidget {
                   IconButton(
                       onPressed: () {},
                       icon: Icon(Icons.shopping_cart_outlined,
-                          color: kIconsColor, size: 26)),
+                          color: Colors.grey, size: 26)),
                   IconButton(
                       onPressed: () {},
                       icon: Icon(Icons.notifications,
-                          color: kIconsColor, size: 26)),
+                          color: Colors.grey, size: 26)),
                 ],
               ),
         body: _cubit.navigationBottomScreens[_cubit.currentIndex],

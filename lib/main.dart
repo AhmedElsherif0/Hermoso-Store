@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'cubit/home/home_cubit.dart';
+import 'cubit/home/products/products_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +53,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create: (context) => RegisterCubit()),
-        BlocProvider(create: (context) => HomeCubit()..getData()),
+        BlocProvider(create: (context) => HomeCubit()),
+        BlocProvider(create: (context) => ProductsCubit()..getData()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -65,6 +67,7 @@ class MyApp extends StatelessWidget {
           ForgetPassword.routeName: (ctx) => ForgetPassword(),
           RegisterScreen.routeName: (ctx) => RegisterScreen(),
           HomeScreen.routeName: (ctx) => HomeScreen(),
+
         },
       ),
     );

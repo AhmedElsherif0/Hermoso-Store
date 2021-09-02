@@ -1,14 +1,14 @@
 import 'package:firstdesign/data/service/dio_service.dart';
 import 'package:firstdesign/utils/constants.dart';
 
-abstract class HomeRepository {
-  Future getHomeData();
+abstract class ProductsRepository {
+  Future getProductsData();
 }
 
-class MockHomeRepository extends HomeRepository {
+class MockProductsRepo extends ProductsRepository {
 
   @override
-  Future getHomeData() async {
+  Future getProductsData() async {
     return   await DioService.getResponse(url:'home',token: token);
   }
 }

@@ -5,7 +5,6 @@ class CustomElevatedButton extends StatelessWidget {
       {required this.text, required this.onPress, this.isLoading = false});
 
   final String text;
-
   final VoidCallback? onPress;
   final bool isLoading;
 

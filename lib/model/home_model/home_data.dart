@@ -7,8 +7,8 @@ class HomeData {
   List<Products>? _products = [];
 
    HomeData.fromJson(Map<String, dynamic>? json) {
-  //   banners = json?['banners'].forEach((v) => Banners.fromJson(v));
-  //   products = json?['products'].forEach((v) =>  Products.fromJson(v));
+  //   _banners = json?['banners'].forEach((v) => Banners.fromJson(v));
+  //   _products = json?['products'].forEach((v) =>  Products.fromJson(v));
      _banners =
         json?['banners'].map<Banners>((v) => Banners.fromJson(v)).toList();
     _products =

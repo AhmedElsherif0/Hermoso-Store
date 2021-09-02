@@ -6,4 +6,10 @@ const TextStyle kMainText =
     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 const TextStyle kSubTitle = TextStyle(color: Colors.grey, fontSize: 16);
 
-const TextStyle kTitleStyle = TextStyle(fontSize: 16,fontWeight: FontWeight.bold);
+const TextStyle kTitleStyle =
+    TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
+
+const TextStyle kDiscountStyle = TextStyle(
+    fontWeight: FontWeight.w600,
+    color: Colors.red,
+    decoration: TextDecoration.lineThrough);
