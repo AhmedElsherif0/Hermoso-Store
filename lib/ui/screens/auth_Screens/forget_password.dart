@@ -1,15 +1,15 @@
-import 'package:firstdesign/ui/screens/auth_Screens/register_screen.dart';
-import 'package:firstdesign/ui/widgets/custom_elevated_button.dart';
-import 'package:firstdesign/ui/widgets/custom_form_field.dart';
-import 'package:firstdesign/ui/widgets/custom_text_button.dart';
-import 'package:firstdesign/ui/widgets/header_text.dart';
-import 'package:firstdesign/utils/style.dart';
+import 'package:hermoso_store/ui/screens/auth_Screens/register_screen.dart';
+import 'package:hermoso_store/ui/widgets/custom_elevated_button.dart';
+import 'package:hermoso_store/ui/widgets/custom_form_field.dart';
+import 'package:hermoso_store/ui/widgets/custom_text_button.dart';
+import 'package:hermoso_store/ui/widgets/header_text.dart';
+import 'package:hermoso_store/utils/style.dart';
 import 'package:flutter/material.dart';
 
 class ForgetPassword extends StatelessWidget {
   static const routeName = '/forget_Password';
 
-  const ForgetPassword();
+  const ForgetPassword({Key?  key}) : super (key:key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class ForgetPassword extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
           child: Column(
             children: [
-              HeaderTexts(
+              const HeaderTexts(
                 title: 'Forget Password',
                 subTitle:
                     'Please enter your email and we will send\n you a link to return your account ',

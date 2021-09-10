@@ -1,5 +1,5 @@
-import 'package:firstdesign/data/service/dio_service.dart';
-import 'package:firstdesign/utils/constants.dart';
+import 'package:hermoso_store/data/service/dio_service.dart';
+import 'package:hermoso_store/utils/constants.dart';
 
 abstract class ProductsRepository {
   Future getProductsData();

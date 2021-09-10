@@ -1,12 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-    package="com.example.subshop">
+    package="com.example.hermoso_store">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:icon="@mipmap/ic_launcher"
-        android:label="subshop">
+        android:label="hermoso_store">
 
         <activity
             android:name=".MainActivity"

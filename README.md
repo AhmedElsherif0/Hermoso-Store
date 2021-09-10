@@ -1,4 +1,4 @@
-# firstdesign
+# hermoso_store
 
 A new Flutter project.
 

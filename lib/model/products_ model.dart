@@ -8,8 +8,6 @@ class Products {
   bool? inFavorites;
   bool? inCart;
 
- /* Products({this.id, this.price, this.oldPrice, this.discount, this.image,
-      this.name, this.description, this.inFavorites, this.inCart});*/
 
   Products.fromJson(Map<String, dynamic>? json) {
     id = json?['id'];

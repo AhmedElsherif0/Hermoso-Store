@@ -1,15 +1,15 @@
-import 'package:firstdesign/cubit/login_cubit/login_cubit.dart';
-import 'package:firstdesign/cubit/register_cubit/register_cubit.dart';
-import 'package:firstdesign/data/local_data/shared_preferences.dart';
-import 'package:firstdesign/data/service/dio_service.dart';
-import 'package:firstdesign/ui/screens/auth_Screens/forget_password.dart';
-import 'package:firstdesign/ui/screens/auth_Screens/login_screen.dart';
-import 'package:firstdesign/ui/screens/auth_Screens/register_screen.dart';
-import 'package:firstdesign/ui/screens/home/home_page.dart';
-import 'package:firstdesign/ui/screens/onboard_screen.dart';
-import 'package:firstdesign/utils/bloc_observer.dart';
-import 'package:firstdesign/utils/constants.dart';
-import 'package:firstdesign/utils/themes.dart';
+import 'package:hermoso_store/cubit/login_cubit/login_cubit.dart';
+import 'package:hermoso_store/cubit/register_cubit/register_cubit.dart';
+import 'package:hermoso_store/data/local_data/shared_preferences.dart';
+import 'package:hermoso_store/data/service/dio_service.dart';
+import 'package:hermoso_store/ui/screens/auth_Screens/forget_password.dart';
+import 'package:hermoso_store/ui/screens/auth_Screens/login_screen.dart';
+import 'package:hermoso_store/ui/screens/auth_Screens/register_screen.dart';
+import 'package:hermoso_store/ui/screens/home/home_page.dart';
+import 'package:hermoso_store/ui/screens/onboard_screen.dart';
+import 'package:hermoso_store/utils/bloc_observer.dart';
+import 'package:hermoso_store/utils/constants.dart';
+import 'package:hermoso_store/utils/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,19 +21,22 @@ void main() async {
 
   Bloc.observer = SimpleBlocObserver();
   await DioService.init();
-  await SharedPref.Init();
+  await SharedPref.init();
 
-  Widget widget = OnBoardScreen();
+  Widget widget = const OnBoardScreen();
   bool? boardScreen = await SharedPref.getData(key: 'BoardScreen');
 
-   token = await SharedPref.getData(key: 'token');
+  token = await SharedPref.getData(key: 'token');
 
-  if (boardScreen != null) if (token != null)
-    widget = HomeScreen();
-  else
-    widget = LoginScreen();
-  else
-    widget = OnBoardScreen();
+  if (boardScreen != null) {
+    if (token != null) {
+      widget = const HomeScreen();
+    } else {
+      widget = const LoginScreen();
+    }
+  } else {
+    widget = const OnBoardScreen();
+  }
 
   runApp(MyApp(widget: widget));
 }
@@ -45,7 +48,8 @@ Future<Widget> authToken(Widget widget, token, boardScreen) async {
 class MyApp extends StatelessWidget {
   final Widget widget;
 
-  const MyApp({this.widget = const OnBoardScreen()});
+  const MyApp({Key? key, this.widget = const OnBoardScreen()})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +66,11 @@ class MyApp extends StatelessWidget {
         theme: lightThemeMode(),
         home: widget,
         routes: {
-          OnBoardScreen.routeName: (ctx) => OnBoardScreen(),
-          LoginScreen.routeName: (ctx) => LoginScreen(),
-          ForgetPassword.routeName: (ctx) => ForgetPassword(),
-          RegisterScreen.routeName: (ctx) => RegisterScreen(),
-          HomeScreen.routeName: (ctx) => HomeScreen(),
-
+          OnBoardScreen.routeName: (ctx) => const OnBoardScreen(),
+          LoginScreen.routeName: (ctx) => const LoginScreen(),
+          ForgetPassword.routeName: (ctx) => const ForgetPassword(),
+          RegisterScreen.routeName: (ctx) => const RegisterScreen(),
+          HomeScreen.routeName: (ctx) => const HomeScreen(),
         },
       ),
     );

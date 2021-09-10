@@ -1,16 +1,9 @@
-import 'package:firstdesign/model/auth_model/user_data.dart';
+import 'package:hermoso_store/model/auth_model/user_data.dart';
 
 class AuthModel {
   bool? _status;
   String? _message;
   UserData? _data;
-
-  AuthModel(
-      {required bool status, required String message, required UserData data}) {
-    this._status = status;
-    this._message = message;
-    this._data = data;
-  }
 
   AuthModel.fromJson(Map<String, dynamic>? json) {
     _status = json?['status'];

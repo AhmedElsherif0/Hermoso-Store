@@ -2,7 +2,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import com.example.subshop.R
+import com.example.hermoso_store.R
 import io.flutter.embedding.android.SplashScreen
 
 class SplashView : SplashScreen {

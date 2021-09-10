@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:firstdesign/data/service/dio_service.dart';
+import 'package:hermoso_store/data/service/dio_service.dart';
 
 abstract class LoginRepository {
   Future userLogin(String email, String password);

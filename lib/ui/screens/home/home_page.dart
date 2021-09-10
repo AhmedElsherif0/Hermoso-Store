@@ -1,14 +1,15 @@
-import 'package:firstdesign/cubit/home/home_cubit.dart';
-import 'package:firstdesign/ui/widgets/my_nav_bottom_bar.dart';
-import 'package:firstdesign/ui/widgets/search_field.dart';
-import 'package:firstdesign/utils/colors.dart';
+import 'package:hermoso_store/cubit/home/home_cubit.dart';
+import 'package:hermoso_store/ui/widgets/my_nav_bottom_bar.dart';
+import 'package:hermoso_store/ui/widgets/search_field.dart';
+import 'package:hermoso_store/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
 
-  const HomeScreen();
+  const HomeScreen({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +23,14 @@ class HomeScreen extends StatelessWidget {
             ? null
             : AppBar(
                 actions: [
-                  SearchField(),
+                  const SearchField(),
                   IconButton(
                       onPressed: () {},
-                      icon: Icon(Icons.shopping_cart_outlined,
+                      icon: const Icon(Icons.shopping_cart_outlined,
                           color: Colors.grey, size: 26)),
                   IconButton(
                       onPressed: () {},
-                      icon: Icon(Icons.notifications,
+                      icon: const Icon(Icons.notifications,
                           color: Colors.grey, size: 26)),
                 ],
               ),

@@ -2,5 +2,5 @@
 
  import 'dart:ui';
 
-const kBackgroundColor = const Color(0xffeeeeee);
-const kIconsColor = const Color(0xffbdbdbd);
+const kBackgroundColor = Color(0xffeeeeee);
+const kIconsColor = Color(0xffbdbdbd);

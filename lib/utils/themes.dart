@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 ThemeData lightThemeMode() {
   return ThemeData(
-    scaffoldBackgroundColor: Color(0xffffffff),
+    scaffoldBackgroundColor: const Color(0xffffffff),
     textTheme: GoogleFonts.aBeeZeeTextTheme(ThemeData.light().textTheme),
     colorScheme: const ColorScheme.light(
       primary: Color(0xff6ae7d9),
@@ -13,9 +13,8 @@ ThemeData lightThemeMode() {
       background: Color(0xffffffff),
     ),
     appBarTheme: const AppBarTheme(
-      backwardsCompatibility: false,
       centerTitle: true,
-      backgroundColor: const Color(0xffffffff) ,
+      backgroundColor: Color(0xffffffff) ,
       systemOverlayStyle: SystemUiOverlayStyle(
           statusBarBrightness: Brightness.dark,
           statusBarColor: Colors.white,

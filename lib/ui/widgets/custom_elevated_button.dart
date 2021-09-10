@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton(
-      {required this.text, required this.onPress, this.isLoading = false});
-
   final String text;
   final VoidCallback? onPress;
   final bool isLoading;
+
+  const CustomElevatedButton(
+      {Key? key, required this.text, required this.onPress,  this.isLoading =false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +20,13 @@ class CustomElevatedButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20))),
-        child: isLoading ? CircularProgressIndicator(
-        ): Text(
-          text,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : Text(
+                text,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
       ),
     );
   }

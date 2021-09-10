@@ -1,24 +1,24 @@
-import 'package:firstdesign/cubit/register_cubit/register_cubit.dart';
-import 'package:firstdesign/data/local_data/shared_preferences.dart';
-import 'package:firstdesign/ui/screens/auth_Screens/login_screen.dart';
-import 'package:firstdesign/ui/screens/home/home_page.dart';
-import 'package:firstdesign/ui/widgets/custom_elevated_button.dart';
-import 'package:firstdesign/ui/widgets/row_text_and_button.dart';
+import 'package:hermoso_store/cubit/register_cubit/register_cubit.dart';
+import 'package:hermoso_store/data/local_data/shared_preferences.dart';
+import 'package:hermoso_store/ui/screens/auth_Screens/login_screen.dart';
+import 'package:hermoso_store/ui/screens/home/home_page.dart';
+import 'package:hermoso_store/ui/widgets/custom_elevated_button.dart';
+import 'package:hermoso_store/ui/widgets/row_text_and_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'custom_form_field.dart';
 
 class RegisterFormBody extends StatefulWidget {
-  const RegisterFormBody();
+  const RegisterFormBody({Key? key}) :super (key: key);
 
   @override
   _RegisterFormBodyState createState() => _RegisterFormBodyState();
 }
 
 class _RegisterFormBodyState extends State<RegisterFormBody> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Map<String, String>? _authMode = {
+  final Map<String, String>? _authMode = {
     'email': '',
     'password': '',
     'confirm': '',
@@ -28,11 +28,11 @@ class _RegisterFormBodyState extends State<RegisterFormBody> {
 
   bool _isPassword = false;
 
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _confirmPassController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPassController = TextEditingController();
 
   @override
   void dispose() {
@@ -52,7 +52,7 @@ class _RegisterFormBodyState extends State<RegisterFormBody> {
           final _prefs = await SharedPref.saveStringData(
               key: 'token', value: state.authModel.data?.token);
           print('token is : $_prefs');
-          Navigator.pushNamed(context, HomeScreen.routeName);
+          Navigator.pushReplacementNamed(context, HomeScreen.routeName);
         }
         if (state is RegisterErrorState) {
           buildAlertsDialog(
@@ -89,8 +89,9 @@ class _RegisterFormBodyState extends State<RegisterFormBody> {
                     textInputType: TextInputType.emailAddress,
                     controller: _emailController,
                     validator: (value) {
-                      if (value.isEmpty || !value.contains('@'))
+                      if (value.isEmpty || !value.contains('@')) {
                         return 'Invalid Email !';
+                      }
                       return null;
                     },
                     onSaved: (value) {
@@ -105,8 +106,9 @@ class _RegisterFormBodyState extends State<RegisterFormBody> {
                     textInputType: TextInputType.phone,
                     controller: _phoneController,
                     validator: (value) {
-                      if (value.length != 11 || value.isEmpty)
+                      if (value.length != 11 || value.isEmpty) {
                         return 'phone is too short!';
+                      }
                       return null;
                     },
                     onSaved: (value) {
@@ -130,8 +132,9 @@ class _RegisterFormBodyState extends State<RegisterFormBody> {
                           });
                         }),
                     validator: (value) {
-                      if (value.isEmpty || value.length < 6)
+                      if (value.isEmpty || value.length < 6) {
                         return 'Password is too short!';
+                      }
                       return null;
                     },
                     onSaved: (value) {
@@ -155,10 +158,11 @@ class _RegisterFormBodyState extends State<RegisterFormBody> {
                           });
                         }),
                     validator: (value) {
-                      if (value.isEmpty || value.length < 6)
+                      if (value.isEmpty || value.length < 6) {
                         return 'Confirm Password is wrong!';
-                      else if (value != _passwordController.text)
+                      } else if (value != _passwordController.text) {
                         return 'confirm not equal to the password';
+                      }
                       return null;
                     },
                     onSaved: (value) {
@@ -199,12 +203,12 @@ class _RegisterFormBodyState extends State<RegisterFormBody> {
     final action = await showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-              titleTextStyle: TextStyle(color: Colors.black),
+              titleTextStyle: const TextStyle(color: Colors.black),
               title: Text(title),
               content: Text(message),
               actions: [
-                TextButton(onPressed: () {}, child: Text('yes')),
-                TextButton(onPressed: () {}, child: Text('No')),
+                TextButton(onPressed: () {}, child: const Text('yes')),
+                TextButton(onPressed: () {}, child: const Text('No')),
               ],
             ));
     return action;

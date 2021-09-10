@@ -8,7 +8,7 @@ class CustomFormField extends StatelessWidget {
       required this.suffixIcon,
       this.obscureText,
       required this.validator,
-       this.onSaved, this.controller});
+       this.onSaved, this.controller,Key? key}) : super (key: key);
 
   final String? labelText;
   final String? hintText;
@@ -31,7 +31,7 @@ class CustomFormField extends StatelessWidget {
           hintText: hintText,
           suffixIcon: suffixIcon,
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          contentPadding: EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
           enabledBorder: _outlineInputBorder(),
           focusedBorder: _outlineInputBorder(),
       focusedErrorBorder: _outlineInputBorder(),
@@ -45,7 +45,7 @@ class CustomFormField extends StatelessWidget {
   OutlineInputBorder _outlineInputBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
-      borderSide: BorderSide(color: Colors.black),
+      borderSide: const BorderSide(color: Colors.black),
       gapPadding:  10,
     );
   }

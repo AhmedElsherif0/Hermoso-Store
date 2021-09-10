@@ -1,17 +1,17 @@
-import 'package:firstdesign/cubit/login_cubit/login_cubit.dart';
-import 'package:firstdesign/data/local_data/shared_preferences.dart';
-import 'package:firstdesign/ui/screens/auth_Screens/forget_password.dart';
-import 'package:firstdesign/ui/screens/auth_Screens/register_screen.dart';
-import 'package:firstdesign/ui/screens/home/home_page.dart';
-import 'package:firstdesign/ui/widgets/custom_text_button.dart';
-import 'package:firstdesign/ui/widgets/row_text_and_button.dart';
+import 'package:hermoso_store/cubit/login_cubit/login_cubit.dart';
+import 'package:hermoso_store/data/local_data/shared_preferences.dart';
+import 'package:hermoso_store/ui/screens/auth_Screens/forget_password.dart';
+import 'package:hermoso_store/ui/screens/auth_Screens/register_screen.dart';
+import 'package:hermoso_store/ui/screens/home/home_page.dart';
+import 'package:hermoso_store/ui/widgets/custom_text_button.dart';
+import 'package:hermoso_store/ui/widgets/row_text_and_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './custom_elevated_button.dart';
 import './custom_form_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginFormBody extends StatefulWidget {
-  const LoginFormBody();
+  const LoginFormBody({Key? key}): super(key :key);
 
   @override
   _LoginFormBodyState createState() => _LoginFormBodyState();
@@ -19,10 +19,10 @@ class LoginFormBody extends StatefulWidget {
 
 class _LoginFormBodyState extends State<LoginFormBody> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Map<String, String>? _authMode = {'email': '', 'password': ''};
+  final Map<String, String>? _authMode = {'email': '', 'password': ''};
   bool isPassword = false;
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -57,8 +57,9 @@ class _LoginFormBodyState extends State<LoginFormBody> {
                 textInputType: TextInputType.emailAddress,
                 controller: _emailController,
                 validator: (value) {
-                  if (value.isEmpty || !value.contains('@'))
+                  if (value.isEmpty || !value.contains('@')) {
                     return 'Invalid email!';
+                  }
                   return null;
                 },
                 onSaved: (value) {
@@ -82,8 +83,9 @@ class _LoginFormBodyState extends State<LoginFormBody> {
                       });
                     }),
                 validator: (value) {
-                  if (value.isEmpty || value.length < 6)
+                  if (value.isEmpty || value.length < 6) {
                     return 'Password is too short!';
+                  }
                   return null;
                 },
                 onSaved: (value) {
@@ -97,7 +99,7 @@ class _LoginFormBodyState extends State<LoginFormBody> {
                     Navigator.pushNamed(context, ForgetPassword.routeName);
                   }),
               if (state is LoginLoadingState)
-                Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator()),
               CustomElevatedButton(
                   text: 'Login',
                   onPress: state is LoginLoadingState ? null : _onLogin),
@@ -129,16 +131,16 @@ class _LoginFormBodyState extends State<LoginFormBody> {
     final action = await showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-              titleTextStyle: TextStyle(color: Colors.black),
+              titleTextStyle: const TextStyle(color: Colors.black),
               title: Text(title),
               content: Text(message),
               actions: [
                 if (state)
                   TextButton(
                       onPressed: () => Navigator.of(context).pop,
-                      child: Text('ok')),
-                TextButton(onPressed: () {}, child: Text('yes')),
-                TextButton(onPressed: () {}, child: Text('No')),
+                      child: const Text('ok')),
+                TextButton(onPressed: () {}, child: const Text('yes')),
+                TextButton(onPressed: () {}, child: const Text('No')),
               ],
             ));
     return action;

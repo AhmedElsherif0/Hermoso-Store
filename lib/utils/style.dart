@@ -13,3 +13,8 @@ const TextStyle kDiscountStyle = TextStyle(
     fontWeight: FontWeight.w600,
     color: Colors.red,
     decoration: TextDecoration.lineThrough);
+
+const TextStyle kTitleCardStyle =  TextStyle(
+    color: Colors.black,
+    fontSize: 14,
+    fontWeight: FontWeight.bold);

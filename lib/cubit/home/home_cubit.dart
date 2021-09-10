@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:firstdesign/model/home_model/home_model.dart';
-import 'package:firstdesign/ui/screens/home/categories_screen.dart';
-import 'package:firstdesign/ui/screens/home/favorites_screen.dart';
-import 'package:firstdesign/ui/screens/home/products_screen.dart';
-import 'package:firstdesign/ui/screens/home/settings_screen.dart';
+import 'package:hermoso_store/model/home_model/home_model.dart';
+import 'package:hermoso_store/ui/screens/home/categories_screen.dart';
+import 'package:hermoso_store/ui/screens/home/favorites_screen.dart';
+import 'package:hermoso_store/ui/screens/home/products_screen.dart';
+import 'package:hermoso_store/ui/screens/home/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,11 +17,11 @@ class HomeCubit extends Cubit<HomeState> {
 
   int _currentIndex = 0;
 
-  List<Widget> _navigationBottomScreens = [
-    ProductsScreen(),
-    FavoritesScreen(),
-    CategoriesScreen(),
-    SettingsScreen(),
+  final List<Widget> _navigationBottomScreens = [
+    const ProductsScreen(),
+    const FavoritesScreen(),
+    const CategoriesScreen(),
+    const SettingsScreen(),
   ];
 
   int get currentIndex => _currentIndex;

@@ -1,5 +1,5 @@
-import 'package:firstdesign/ui/widgets/custom_text_button.dart';
-import 'package:firstdesign/utils/style.dart';
+import 'package:hermoso_store/ui/widgets/custom_text_button.dart';
+import 'package:hermoso_store/utils/style.dart';
 import 'package:flutter/material.dart';
 
 class RowTextAndButton extends StatelessWidget {
@@ -7,7 +7,7 @@ class RowTextAndButton extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
 
-  const RowTextAndButton({required this.text, required this.onPressed, required this.title});
+  const RowTextAndButton({required this.text, required this.onPressed, required this.title,Key? key}) :super (key: key);
 
   @override
   Widget build(BuildContext context) {

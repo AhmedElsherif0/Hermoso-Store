@@ -1,6 +1,6 @@
 class OnBoardModel {
-  int? _currentPage = 0;
-  List<Map<String, String>>? _bodyList = [
+  int? currentPage = 0;
+ final List<Map<String, String>>? bodyList = const[
     {
       "text": "Welcome to Hermoso, Let’s shop!",
       "image": "assets/images/onboarding0.png"
@@ -15,11 +15,4 @@ class OnBoardModel {
     },
   ];
 
-  List<Map<String, String>>? get bodyList => _bodyList;
-
-  int? get currentPage => _currentPage;
-
-  set currentPage(int? value) {
-    _currentPage = value;
-  }
 }

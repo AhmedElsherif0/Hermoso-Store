@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class SearchField extends StatelessWidget {
-  const SearchField();
+  const SearchField({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
           horizontal: 8,
           vertical: 8,
         ),
@@ -16,7 +17,7 @@ class SearchField extends StatelessWidget {
         ),
         child: TextField(
           onChanged: (value) => print(value),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               contentPadding: EdgeInsets.all(12),
               border: InputBorder.none,
               focusedBorder: InputBorder.none,

@@ -1,8 +1,8 @@
-import 'package:firstdesign/data/local_data/shared_preferences.dart';
-import 'package:firstdesign/model/onboard_model.dart';
-import 'package:firstdesign/ui/widgets/custom_elevated_button.dart';
-import 'package:firstdesign/ui/widgets/dots_container.dart';
-import 'package:firstdesign/ui/widgets/onboard_body.dart';
+import 'package:hermoso_store/data/local_data/shared_preferences.dart';
+import 'package:hermoso_store/model/onboard_model.dart';
+import 'package:hermoso_store/ui/widgets/custom_elevated_button.dart';
+import 'package:hermoso_store/ui/widgets/dots_container.dart';
+import 'package:hermoso_store/ui/widgets/onboard_body.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,8 @@ import 'auth_Screens/login_screen.dart';
 class OnBoardScreen extends StatefulWidget {
   static const routeName = '/onBoard-Screen';
 
-  const OnBoardScreen();
+  const OnBoardScreen({Key? key}) : super(key: key);
+
 
   @override
   _OnBoardScreenState createState() => _OnBoardScreenState();
@@ -19,7 +20,7 @@ class OnBoardScreen extends StatefulWidget {
 
 class _OnBoardScreenState extends State<OnBoardScreen> {
   final OnBoardModel? _onBoardModel = OnBoardModel();
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   bool _isDone = false;
 
   @override
@@ -78,7 +79,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                             _isDone
                                 ? _toLoginScreen()
                                 : _pageController.nextPage(
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.fastLinearToSlowEaseIn);
                           });
                         },

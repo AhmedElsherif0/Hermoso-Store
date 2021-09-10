@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DotsContainer extends StatelessWidget {
-   DotsContainer({required this.currentPage , required this.index});
  final int index;
  final int? currentPage ;
+
+  const DotsContainer({Key? key, required this.index, required this.currentPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class DotsContainer extends StatelessWidget {
               ? Theme.of(context).colorScheme.primary
               : const Color(0xffD6D6D6),
           borderRadius:  BorderRadius.circular(3)),
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     );
   }
 }

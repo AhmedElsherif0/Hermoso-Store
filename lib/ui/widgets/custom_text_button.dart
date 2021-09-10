@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CustomTextButton extends StatelessWidget {
-  const CustomTextButton({required this.text, required this.onPressed});
-
   final String text;
   final VoidCallback onPressed;
+
+  const CustomTextButton(
+      {Key? key, required this.text, required this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,7 @@ class CustomTextButton extends StatelessWidget {
       alignment: Alignment.bottomRight,
       child: TextButton(
         onPressed: onPressed,
-        child: Text(text, style: TextStyle(fontSize: 18)),
+        child: Text(text, style: const TextStyle(fontSize: 18)),
       ),
     );
   }

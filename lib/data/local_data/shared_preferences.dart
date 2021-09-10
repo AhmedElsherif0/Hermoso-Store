@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPref {
   static SharedPreferences? _sharedPreferences;
 
-  static Init() async {
+  static init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
   }
 
@@ -13,12 +13,13 @@ class SharedPref {
   }
 
   static Future<bool?> saveData({required String key, dynamic value}) async {
-    if (value is bool)
+    if (value is bool) {
       return await _sharedPreferences?.setBool(key, value) ?? false;
-    else if (value is String)
+    } else if (value is String) {
       return await _sharedPreferences?.setString(key, value) ?? false;
-    else if (value is int)
+    } else if (value is int) {
       return await _sharedPreferences?.setInt(key, value) ?? false;
+    }
 
     return await _sharedPreferences?.setDouble(key, value) ?? false;
   }
@@ -34,11 +35,11 @@ class SharedPref {
   }
 
   static dynamic getData({required String key}) async {
-    return await _sharedPreferences?.get(key) ;
+    return _sharedPreferences?.get(key) ;
   }
 
   static dynamic getBoolData({required dynamic key}) async {
-    return await _sharedPreferences?.getBool(key) ?? false;
+    return _sharedPreferences?.getBool(key) ?? false;
   }
 
   static Future<bool?> removeData({required String key}) async {

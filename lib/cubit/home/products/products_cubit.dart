@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
-import 'package:firstdesign/model/home_model/home_model.dart';
-import 'package:firstdesign/repository/home_repository.dart';
+import 'package:hermoso_store/model/home_model/home_model.dart';
+import 'package:hermoso_store/repository/home_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'products_state.dart';
 
 class ProductsCubit extends Cubit<ProductsState> {
-  ProductsRepository _productsRepository = MockProductsRepo();
+  final ProductsRepository _productsRepository = MockProductsRepo();
 
   ProductsCubit() : super(ProductsInitialState());
 

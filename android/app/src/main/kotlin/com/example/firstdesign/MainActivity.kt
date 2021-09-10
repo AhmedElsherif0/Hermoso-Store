@@ -1,4 +1,4 @@
-package com.example.subshop
+package com.example.hermoso_store
 
 import SplashView
 import io.flutter.embedding.android.FlutterActivity

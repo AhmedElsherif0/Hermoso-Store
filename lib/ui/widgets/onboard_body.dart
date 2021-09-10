@@ -1,8 +1,8 @@
-import 'package:firstdesign/utils/style.dart';
+import 'package:hermoso_store/utils/style.dart';
 import 'package:flutter/material.dart';
 
 class OnBoardBody extends StatelessWidget {
-  const OnBoardBody({Key? key, required this.text, required this.image});
+  const OnBoardBody({Key? key, required this.text, required this.image}) : super (key: key);
 
   final String text;
   final String image;
@@ -14,7 +14,7 @@ class OnBoardBody extends StatelessWidget {
       children: [
       const  Spacer(),
         Container(
-            margin: EdgeInsets.all(8),
+            margin: const EdgeInsets.all(8),
             child: const Text('Hermoso',
                 style: kHermosoLogo, textAlign: TextAlign.center),),
         Text(

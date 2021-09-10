@@ -1,19 +1,13 @@
 class Category {
-  int? _id;
-  String? _image;
-  String? _name;
+  int? id;
+  String? image;
+  String? name;
 
-  int? get id => _id;
-  set id(int? id) => _id = id;
-  String? get image => _image;
-  set image(String? image) => _image = image;
-  String? get name => _name;
-  set name(String? name) => _name = name;
 
   Category.fromJson(Map<String, dynamic>? json) {
-    _id = json?['id'];
-    _image = json?['image'];
-    _name = json?['name'];
+    id = json?['id'];
+    image = json?['image'];
+    name = json?['name'];
   }
 
   /*Map<String, dynamic> toJson() {
