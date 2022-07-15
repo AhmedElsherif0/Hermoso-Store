@@ -1,14 +1,16 @@
 import 'home_data.dart';
 
-class ProductsModel {
+class HomeModel {
   bool? status;
-  bool? message;
-  HomeData? data;
+  String? message;
+  HomeData data = HomeData();
 
-  ProductsModel.fromJson(Map<String, dynamic>? json) {
+  HomeModel();
+
+  HomeModel.fromJson(Map<String, dynamic>? json) {
     status = json?["status"];
     message = json?["message"];
-    data = json?['data'] != null ? HomeData.fromJson(json?['data']) : null;
+    data = (json?['data'] != null ? HomeData.fromJson(json?['data']) : null)!;
   }
 
 }

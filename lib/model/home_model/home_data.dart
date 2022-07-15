@@ -1,17 +1,20 @@
-import '../banners_model.dart';
-import '../products_ model.dart';
+import '../products/banners_model.dart';
+import '../products/product_model.dart';
 
 class HomeData {
-  List<Banners>? banners = [];
+  HomeData();
+  List<BannersModel> banners = [];
 
-  List<Products>? products = [];
+  List<ProductModel> products = [];
 
-   HomeData.fromJson(Map<String, dynamic>? json) {
-  //   _banners = json?['banners'].forEach((v) => Banners.fromJson(v));
-  //   _products = json?['products'].forEach((v) =>  Products.fromJson(v));
-     banners =
-        json?['banners'].map<Banners>((v) => Banners.fromJson(v)).toList();
+  HomeData.fromJson(Map<String, dynamic>? json) {/*
+    banners =
+        json?['banners'].forEach<BannersModel>((v) => BannersModel.fromJson(v));
+    products = json?['products']
+        .forEach<ProductModel>((v) => ProductModel.fromJson(v));*/
+      banners =
+        json?['banners'].map<BannersModel>((v) => BannersModel.fromJson(v)).toList();
     products =
-        json?['products'].map<Products>((v) => Products.fromJson(v)).toList();
+        json?['products'].map<ProductModel>((v) => ProductModel.fromJson(v)).toList();
   }
 }

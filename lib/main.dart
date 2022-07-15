@@ -1,76 +1,79 @@
-import 'package:hermoso_store/cubit/login_cubit/login_cubit.dart';
-import 'package:hermoso_store/cubit/register_cubit/register_cubit.dart';
+import 'package:hermoso_store/cubit/authUser/auth_users_cubit.dart';
+import 'package:hermoso_store/cubit/home/categories/categories_cubit.dart';
 import 'package:hermoso_store/data/local_data/shared_preferences.dart';
 import 'package:hermoso_store/data/service/dio_service.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/forget_password.dart';
 import 'package:hermoso_store/ui/screens/auth_Screens/login_screen.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/register_screen.dart';
 import 'package:hermoso_store/ui/screens/home/home_page.dart';
 import 'package:hermoso_store/ui/screens/onboard_screen.dart';
-import 'package:hermoso_store/utils/bloc_observer.dart';
 import 'package:hermoso_store/utils/constants.dart';
+import 'package:hermoso_store/utils/routes.dart';
 import 'package:hermoso_store/utils/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'cubit/home/favorite_cubit/favorite_cubit.dart';
 import 'cubit/home/home_cubit.dart';
 import 'cubit/home/products/products_cubit.dart';
+import 'cubit/home/settings/settings_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Bloc.observer = SimpleBlocObserver();
   await DioService.init();
   await SharedPref.init();
 
   Widget widget = const OnBoardScreen();
-  bool? boardScreen = await SharedPref.getData(key: 'BoardScreen');
-
-  token = await SharedPref.getData(key: 'token');
+  bool? boardScreen = SharedPref.getData(key: 'BoardScreen');
+  print('onboard main Screen ${boardScreen.toString()}');
+  token = SharedPref.getData(key: 'token');
+  bool isDarkTheme = SharedPref.getData(key: 'dark') ?? false;
+  print('main token = ${token.toString()}');
+  print('main dark Theme = ${isDarkTheme.toString()}');
 
   if (boardScreen != null) {
-    if (token != null) {
-      widget = const HomeScreen();
-    } else {
-      widget = const LoginScreen();
-    }
+    token != null ? widget = const HomeScreen() : widget = const LoginScreen();
   } else {
     widget = const OnBoardScreen();
   }
 
-  runApp(MyApp(widget: widget));
-}
-
-Future<Widget> authToken(Widget widget, token, boardScreen) async {
-  return widget;
+  runApp(MyApp(isDark: isDarkTheme, widget: widget));
 }
 
 class MyApp extends StatelessWidget {
   final Widget widget;
+  final bool isDark;
 
-  const MyApp({Key? key, this.widget = const OnBoardScreen()})
+  const MyApp(
+      {Key? key, this.widget = const OnBoardScreen(), this.isDark = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => LoginCubit()),
-        BlocProvider(create: (context) => RegisterCubit()),
+        BlocProvider(create: (context) => AuthUsersCubit()),
         BlocProvider(create: (context) => HomeCubit()),
-        BlocProvider(create: (context) => ProductsCubit()..getData()),
+        BlocProvider(create: (context) => CategoriesCubit()),
+        BlocProvider(
+            create: (context) =>
+                SettingsCubit()..switchThemeMode(getShared: isDark)),
+        BlocProvider(create: (context) => ProductsCubit()),
+        BlocProvider(create: (context) => FavoriteCubit()),
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: lightThemeMode(),
-        home: widget,
-        routes: {
-          OnBoardScreen.routeName: (ctx) => const OnBoardScreen(),
-          LoginScreen.routeName: (ctx) => const LoginScreen(),
-          ForgetPassword.routeName: (ctx) => const ForgetPassword(),
-          RegisterScreen.routeName: (ctx) => const RegisterScreen(),
-          HomeScreen.routeName: (ctx) => const HomeScreen(),
+      child: BlocBuilder<SettingsCubit, SettingsStates>(
+        builder: (context, state) {
+          SettingsCubit _settingsCubit = SettingsCubit.get(context);
+          return MaterialApp(
+            title: 'Flutter Demo',
+//          useInheritedMediaQuery: true,
+            debugShowCheckedModeBanner: false,
+            darkTheme: darkThemeMode(),
+            theme: lightThemeMode(),
+            themeMode:
+                _settingsCubit.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            home: widget,
+            routes: Routes.route,
+          );
         },
       ),
     );

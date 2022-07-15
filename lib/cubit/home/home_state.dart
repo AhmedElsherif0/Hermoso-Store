@@ -1,22 +1,27 @@
 part of 'home_cubit.dart';
 
 @immutable
-abstract class HomeState {}
+abstract class HomeStates {}
 
-class HomeInitialState extends HomeState {}
+class HomeInitialState extends HomeStates {}
 
-class HomeLoadingState extends HomeState {}
+class HomeLoadingState extends HomeStates {}
 
-class HomeSuccessState extends HomeState {
-  final ProductsModel model;
+class HomeSuccessState extends HomeStates {
+  final HomeModel model;
 
   HomeSuccessState(this.model);
 }
 
-class HomeErrorState extends HomeState {
+class HomeErrorState extends HomeStates {
   final String message;
 
   HomeErrorState(this.message);
 }
+class HomeUserProfileLoadingState extends HomeStates {}
+class HomeUserProfileSuccessState extends HomeStates {
+  final AuthModel authModel ;
+  HomeUserProfileSuccessState(this.authModel);
+}
 
-class HomeNaviBottomBarChange extends HomeState {}
+class HomeNaviBottomBarChange extends HomeStates {}

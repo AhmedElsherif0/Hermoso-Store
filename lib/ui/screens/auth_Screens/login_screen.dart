@@ -1,19 +1,24 @@
+import 'package:hermoso_store/cubit/home/settings/settings_cubit.dart';
+import 'package:hermoso_store/ui/widgets/custom_widgets/custom_action_appbar.dart';
 import 'package:hermoso_store/ui/widgets/login_form_body.dart';
-import 'package:hermoso_store/ui/widgets/header_text.dart';
+import 'package:hermoso_store/ui/widgets/custom_widgets/header_text.dart';
 import 'package:flutter/material.dart';
+import 'package:hermoso_store/utils/colors.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/Login-Screen';
 
   const LoginScreen({Key? key}) : super(key: key);
 
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-      ),
+      appBar: changeAppAndStatusBarColor(
+          isDark: _settingsCubit(context).isDarkMode,
+          color: kWhiteColor, barHeight: 40),
+      backgroundColor: _settingsCubit(context).isDarkMode? null : kWhiteColor,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -24,7 +29,7 @@ class LoginScreen extends StatelessWidget {
                   subTitle:
                       'Sign In with email and password \n or Continue with social media'),
               Spacer(),
-              Expanded( flex:8,child: LoginFormBody()),
+              Expanded(flex: 8, child: LoginFormBody()),
               Spacer(),
             ],
           ),
@@ -32,4 +37,6 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
+  SettingsCubit _settingsCubit(context) => SettingsCubit.get(context);
 }

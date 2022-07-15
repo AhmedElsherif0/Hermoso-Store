@@ -1,40 +1,34 @@
 class UserData {
-  int? _id;
-  String? _name;
-  String? _email;
-  String? _phone;
-  String? _image;
-  int? _points;
-  int? _credit;
-  String? _token;
+  int? id;
+  String name = 'EmptyName';
+  String email = 'Empty@email.com';
+  String? phone;
+  String image = 'assets/product-placeholder.png';
+  int? points;
+  int? credit;
+  String? token;
 
-  UserData(this._id , this._name, this._email, this._phone, this._image,
-      this._points, this._credit, this._token);
+  UserData();
 
-  int? get id => _id;
+  UserData.fromJson(Map<String, dynamic>? json) {
+    id = json?['id'];
+    name = json?['name'];
+    email = json?['email'];
+    phone = json?['phone'];
+    image = json?['image'];
+    points = json?['points'];
+    credit = json?['credit'];
+    token = json?["token"];
+  }
 
-  UserData.fromJson(Map<String ,dynamic>? json){
-      _id = json?['id'];
-      _name = json?['name'];
-      _email = json?['email'];
-      _phone = json?['phone'];
-      _image = json?['image'];
-      _points = json?['points'];
-      _credit = json?['credit'];
-      _token = json?['token'];
-    }
-
-    String? get name => _name;
-
-  String? get token => _token;
-
-  int? get credit => _credit;
-
-  int? get points => _points;
-
-  String? get image => _image;
-
-  String? get phone => _phone;
-
-  String? get email => _email;
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "image": image,
+        "points": points,
+        "credit": credit,
+        "token": token,
+      };
 }

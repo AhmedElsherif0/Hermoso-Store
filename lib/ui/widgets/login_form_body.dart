@@ -1,28 +1,34 @@
-import 'package:hermoso_store/cubit/login_cubit/login_cubit.dart';
-import 'package:hermoso_store/data/local_data/shared_preferences.dart';
+import 'package:hermoso_store/model/auth_model/auth_model.dart';
 import 'package:hermoso_store/ui/screens/auth_Screens/forget_password.dart';
 import 'package:hermoso_store/ui/screens/auth_Screens/register_screen.dart';
 import 'package:hermoso_store/ui/screens/home/home_page.dart';
-import 'package:hermoso_store/ui/widgets/custom_text_button.dart';
-import 'package:hermoso_store/ui/widgets/row_text_and_button.dart';
+import 'package:hermoso_store/ui/widgets/custom_widgets/custom_outline_button.dart';
+import 'package:hermoso_store/ui/widgets/custom_widgets/custom_text_button.dart';
+import 'package:hermoso_store/ui/widgets/custom_widgets/password_icon.dart';
+import 'package:hermoso_store/ui/widgets/custom_widgets/row_text_and_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import './custom_elevated_button.dart';
-import './custom_form_field.dart';
+import 'package:hermoso_store/ui/widgets/show_dialog.dart';
+import '../../cubit/authUser/auth_users_cubit.dart';
+import 'custom_widgets/custom_elevated_button.dart';
+import 'custom_widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
 
+import 'custom_widgets/loading_widget.dart';
+
 class LoginFormBody extends StatefulWidget {
-  const LoginFormBody({Key? key}): super(key :key);
+  const LoginFormBody({Key? key}) : super(key: key);
 
   @override
   _LoginFormBodyState createState() => _LoginFormBodyState();
 }
 
-class _LoginFormBodyState extends State<LoginFormBody> {
+class _LoginFormBodyState extends State<LoginFormBody> with ShowAlertMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Map<String, String>? _authMode = {'email': '', 'password': ''};
-  bool isPassword = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  AuthModel? authModel;
 
   @override
   void dispose() {
@@ -31,118 +37,130 @@ class _LoginFormBodyState extends State<LoginFormBody> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: BlocConsumer<LoginCubit, LoginStates>(
-        listener: (context, state) async {
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: BlocConsumer<AuthUsersCubit, AuthUserStates>(
+            listener: (context, state) async {
           if (state is LoginSuccessState) {
-            await SharedPref.saveStringData(
-                key: 'token', value: state.authModel.data?.token);
-            Navigator.pushNamed(context, HomeScreen.routeName);
+            if (state.authModel.status == true) {
+              Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+            } else {
+              showMeAlertDialog(context, state.authModel.message);
+            }
           }
           if (state is LoginErrorState) {
-            buildAlertsDialog(context, 'Something Went Error',
-                state.error.toString(), state is LoginErrorState);
+            print(state.error.toString());
+            //    showMeAlertDialog(context, state.error.toString());
           }
-        },
-        builder: (context, state) => Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              CustomFormField(
-                labelText: 'Email',
-                hintText: 'Enter Your Email',
-                suffixIcon: const Icon(Icons.mail_outlined),
-                textInputType: TextInputType.emailAddress,
-                controller: _emailController,
-                validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Invalid email!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authMode?['email'] = value!;
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomFormField(
-                textInputType: TextInputType.visiblePassword,
-                obscureText: isPassword ? false : true,
-                labelText: 'Password',
-                hintText: 'Enter Your Password',
-                controller: _passwordController,
-                suffixIcon: IconButton(
-                    icon: isPassword
-                        ? const Icon(Icons.visibility_off_outlined)
-                        : const Icon(Icons.visibility_outlined),
-                    onPressed: () {
-                      setState(() {
-                        isPassword = !isPassword;
-                      });
-                    }),
-                validator: (value) {
-                  if (value.isEmpty || value.length < 6) {
-                    return 'Password is too short!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authMode?['password'] = value!;
-                },
-              ),
-              const SizedBox(height: 30),
-              CustomTextButton(
-                  text: 'Forget Password',
-                  onPressed: () {
-                    Navigator.pushNamed(context, ForgetPassword.routeName);
-                  }),
-              if (state is LoginLoadingState)
-                const Center(child: CircularProgressIndicator()),
-              CustomElevatedButton(
-                  text: 'Login',
-                  onPress: state is LoginLoadingState ? null : _onLogin),
-              const SizedBox(height: 10),
-              RowTextAndButton(
-                  title: 'Don\'t have an Account? ',
-                  text: 'Sign UP',
-                  onPressed: () =>
-                      Navigator.pushNamed(context, RegisterScreen.routeName)),
-            ],
-          ),
-        ),
+        }, builder: (context, state) {
+          return state is LoginLoadingState
+              ? const LoadingWidget()
+              : Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CustomFormField(
+                        labelText: 'Email',
+                        hintText: 'Enter Your Email',
+                        suffixIcon: const Icon(Icons.mail_outlined),
+                        textInputType: TextInputType.emailAddress,
+                        controller: _emailController,
+                          validator: (value) {
+                            if (value.isEmpty || !value.contains('@')) {
+                              return 'Invalid email!';
+                            }
+                            return null;
+                          },
+                        onSaved: (value) {
+                          _authMode?['email'] = value!;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      CustomFormField(
+                        textInputType: TextInputType.visiblePassword,
+                        obscureText:
+                            _loginCubit().isPasswordLogin ? false : true,
+                        labelText: 'Password',
+                        hintText: 'Enter Your Password',
+                        controller: _passwordController,
+                        suffixIcon: PasswordIcon(
+                            isPassword: _loginCubit().isPasswordLogin,
+                            onPressed: state is LoginLoadingState
+                                ? () {}
+                                : () {
+                                    _loginCubit().isPasswordLogin =
+                                        !_loginCubit().isPasswordLogin;
+                                    _loginCubit().changeLoginPassword(
+                                        _loginCubit().isPasswordLogin);
+                                  }),
+                        validator: (value) {
+                          if (value.isEmpty || value.length < 6) {
+                            return 'Password is too short!';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _authMode?['password'] = value!;
+                        },
+                      ),
+                      const SizedBox(height: 30),
+                      CustomTextButton(
+                        text: 'Forget Password',
+                        onPressed: state is LoginLoadingState
+                            ? () {}
+                            : () => Navigator.pushNamed(
+                                context, ForgetPassword.routeName),
+                      ),
+                      if (state is LoginLoadingState)
+                        const Center(child: CircularProgressIndicator()),
+                      CustomElevatedButton(
+                          text: 'Login',
+                          onPress:
+                              state is LoginLoadingState ? null : _onLogin),
+                      const SizedBox(height: 10),
+                      RowTextAndButton(
+                        title: 'Don\'t have an Account?',
+                        text: 'Sign UP',
+                        onPressed: state is LoginLoadingState
+                            ? () {}
+                            : () => Navigator.pushReplacementNamed(
+                                context, RegisterScreen.routeName),
+                      ),
+                    ],
+                  ),
+                );
+        }),
       ),
     );
   }
 
-  void _onLogin() {
+  void _onLogin() async {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
-      LoginCubit.get(context).userLogin(
-          _emailController.text.trim(), _passwordController.text.trim());
-      _formKey.currentState!.save();
+      _loginCubit().userLogin(
+          _emailController.text.trim(),
+          _passwordController.text.trim());
+      _formKey.currentState?.save();
     }
-    _formKey.currentState!.save();
+    _formKey.currentState?.save();
   }
 
-  Future<bool> buildAlertsDialog(
-      BuildContext context, title, message, state) async {
-    final action = await showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              titleTextStyle: const TextStyle(color: Colors.black),
-              title: Text(title),
-              content: Text(message),
-              actions: [
-                if (state)
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop,
-                      child: const Text('ok')),
-                TextButton(onPressed: () {}, child: const Text('yes')),
-                TextButton(onPressed: () {}, child: const Text('No')),
-              ],
-            ));
-    return action;
+  void showMeAlertDialog(BuildContext context, state) {
+    showAlertDialog(
+      context: context,
+      title: state,
+      actionButton: [
+        CustomOutlineButton(
+          onPressed: () => Navigator.pop(context),
+          text: 'Close',
+        )
+      ],
+    );
   }
+
+  AuthUsersCubit _loginCubit() => BlocProvider.of<AuthUsersCubit>(context);
 }

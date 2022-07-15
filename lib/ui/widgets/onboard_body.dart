@@ -19,11 +19,13 @@ class OnBoardBody extends StatelessWidget {
                 style: kHermosoLogo, textAlign: TextAlign.center),),
         Text(
           text,
-          style: kSubTitle,
+          style: Theme.of(context).textTheme.subtitle2,
           textAlign: TextAlign.center,
         ),
        const Spacer(),
-        Expanded(flex:4, child: Image.asset(image, fit: BoxFit.contain, width: 250, height: 250)),
+        Expanded(flex:4,
+            child: Image.asset(image,
+                fit: BoxFit.contain, width: 250, height: 250)),
       ],
     );
   }
