@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hermoso_store/cubit/home/favorite_cubit/favorite_cubit.dart';
 import 'package:hermoso_store/cubit/home/products/products_cubit.dart';
 import 'package:hermoso_store/model/favorite_model/favorite_datum.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/empty_screen.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/loading_widget.dart';
-import 'package:hermoso_store/ui/widgets/product_card.dart';
-import 'package:hermoso_store/ui/widgets/search_field.dart';
-import 'package:hermoso_store/ui/widgets/show_dialog.dart';
+import 'package:hermoso_store/presentation/views/product_card.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/show_snack_bar.dart';
+
 import 'package:hermoso_store/utils/colors.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
 
 import '../../../cubit/home/settings/settings_cubit.dart';
 import '../../widgets/custom_widgets/custom_action_appbar.dart';
+import '../../widgets/custom_widgets/empty_screen.dart';
+import '../../widgets/custom_widgets/loading_widget.dart';
+import '../../widgets/custom_widgets/search_field.dart';
+import '../../widgets/show_dialog.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class FavoritesScreen extends StatefulWidget {
   State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
-class _FavoritesScreenState extends State<FavoritesScreen> with ShowAlertMixin {
+class _FavoritesScreenState extends State<FavoritesScreen> with ShowSnackBar, ShowAlertMixin {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -65,11 +66,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> with ShowAlertMixin {
                 child: BlocConsumer<FavoriteCubit, FavoriteStates>(
               listener: (context, state) {
                 if (state is FavoriteErrorState) {
-                  return showToast(
+                  return showSnackBar(
                       context, 'Please Check Your Network Connection');
                 }
                 if (state is FavoriteSuccessState) {
-                  return showToast(context, 'Done!');
+                  return showSnackBar(context, 'Done!');
                 }
               },
               builder: (context, state) {

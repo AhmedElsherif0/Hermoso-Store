@@ -1,13 +1,9 @@
 import 'package:hermoso_store/cubit/home/home_cubit.dart';
-import 'package:hermoso_store/ui/screens/home/notification_screen.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_action_appbar.dart';
-import 'package:hermoso_store/ui/widgets/nav_bottom_bar.dart';
-import 'package:hermoso_store/ui/widgets/search_field.dart';
-import 'package:hermoso_store/utils/colors.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'card_screen.dart';
+import '../../widgets/nav_bottom_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';

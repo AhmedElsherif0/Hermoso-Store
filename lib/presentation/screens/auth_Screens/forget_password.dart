@@ -1,14 +1,14 @@
-import 'package:hermoso_store/ui/screens/auth_Screens/register_screen.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/back_ios_button.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_action_appbar.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_form_field.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_text_button.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/header_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../cubit/home/settings/settings_cubit.dart';
 import '../../../utils/colors.dart';
+import '../../widgets/custom_widgets/back_ios_button.dart';
+import '../../widgets/custom_widgets/custom_action_appbar.dart';
 import '../../widgets/custom_widgets/custom_elevated_button.dart';
+import '../../widgets/custom_widgets/custom_form_field.dart';
+import '../../widgets/custom_widgets/custom_text_button.dart';
+import '../../widgets/custom_widgets/header_text.dart';
+import 'register_screen.dart';
 
 class ForgetPassword extends StatelessWidget {
   static const routeName = '/forget_Password';

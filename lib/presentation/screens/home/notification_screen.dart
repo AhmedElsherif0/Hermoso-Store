@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_action_appbar.dart';
+import 'package:hermoso_store/cubit/home/settings/settings_cubit.dart';
 
-import '../../../cubit/home/settings/settings_cubit.dart';
+import '../../widgets/custom_widgets/custom_action_appbar.dart';
 import '../../widgets/custom_widgets/empty_screen.dart';
 
-class CardScreen extends StatelessWidget {
-  const CardScreen({Key? key}) : super(key: key);
-  static const routeName = '/card-Screen';
 
+class NotificationsScreen extends StatelessWidget {
+  const NotificationsScreen({Key? key}) : super(key: key);
+  static const routeName = '/notification-Screen';
 
   @override
   Widget build(BuildContext context) {

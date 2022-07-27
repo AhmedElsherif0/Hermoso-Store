@@ -1,20 +1,20 @@
 import 'package:hermoso_store/cubit/home/products/products_cubit.dart';
 import 'package:hermoso_store/cubit/home/settings/settings_cubit.dart';
 import 'package:hermoso_store/model/home_model/home_data.dart';
-import 'package:hermoso_store/ui/screens/home/product_details_screen.dart';
-
-import 'package:hermoso_store/ui/widgets/animated_swiper.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_action_appbar.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/empty_screen.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/loading_widget.dart';
-import 'package:hermoso_store/ui/widgets/search_field.dart';
-import 'package:hermoso_store/ui/widgets/show_dialog.dart';
+import 'package:hermoso_store/presentation/views/product_grid_item.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/show_snack_bar.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/colors.dart';
-import '../../widgets/product_grid_item.dart';
+import '../../views/animated_swiper.dart';
+import '../../widgets/custom_widgets/custom_action_appbar.dart';
+import '../../widgets/custom_widgets/empty_screen.dart';
+import '../../widgets/custom_widgets/loading_widget.dart';
+import '../../widgets/custom_widgets/search_field.dart';
+import '../../widgets/show_dialog.dart';
+import 'product_details_screen.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class ProductsScreen extends StatefulWidget {
   State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
-class _ProductsScreenState extends State<ProductsScreen> with ShowAlertMixin {
+class _ProductsScreenState extends State<ProductsScreen> with ShowSnackBar ,ShowAlertMixin {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
@@ -79,7 +79,7 @@ class _ProductsScreenState extends State<ProductsScreen> with ShowAlertMixin {
     return BlocConsumer<ProductsCubit, ProductsState>(
         listener: (context, state) {
       if (state is ProductsErrorState) {
-        return showToast(context, 'Please Check Your Network Connection');
+        return showSnackBar(context, 'Please Check Your Network Connection');
       }
     }, builder: (context, state) {
       print('Products builder Widget Screen ');

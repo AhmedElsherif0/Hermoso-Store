@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:hermoso_store/model/home_model/home_model.dart';
-import 'package:hermoso_store/ui/screens/home/categories_screen.dart';
-import 'package:hermoso_store/ui/screens/home/favorites_screen.dart';
-import 'package:hermoso_store/ui/screens/home/products_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../model/auth_model/auth_model.dart';
+import '../../presentation/screens/home/categories_screen.dart';
+import '../../presentation/screens/home/favorites_screen.dart';
+import '../../presentation/screens/home/products_screen.dart';
+import '../../presentation/screens/home/settings_screen.dart';
 import '../../repository/settings_repository.dart';
-import '../../ui/screens/home/settings_screen.dart';
 
 part 'home_state.dart';
 

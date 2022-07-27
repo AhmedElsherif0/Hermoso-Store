@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hermoso_store/model/products/product_model.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/back_ios_button.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/hero_animation.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
 import 'package:hermoso_store/utils/style.dart';
 
 import '../../../cubit/home/products/products_cubit.dart';
 import '../../../utils/colors.dart';
+import '../../widgets/custom_widgets/back_ios_button.dart';
+import '../../widgets/custom_widgets/hero_animation.dart';
 import '../../widgets/custom_widgets/price_and_discount.dart';
 
 class ProductDetails extends StatelessWidget {

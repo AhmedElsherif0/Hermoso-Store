@@ -1,11 +1,12 @@
 import 'package:hermoso_store/data/local_data/shared_preferences.dart';
 import 'package:hermoso_store/model/onBoard/onboard_model.dart';
-import 'package:hermoso_store/ui/widgets/dots_container.dart';
-import 'package:hermoso_store/ui/widgets/onboard_body.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hermoso_store/utils/colors.dart';
 
 import '../widgets/custom_widgets/custom_elevated_button.dart';
+import '../views/dots_container.dart';
+import '../views/onboard_body.dart';
 import 'auth_Screens/login_screen.dart';
 
 class OnBoardScreen extends StatefulWidget {

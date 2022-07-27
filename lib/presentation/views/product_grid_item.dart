@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/hero_animation.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/hero_animation.dart';
 import 'package:hermoso_store/utils/colors.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
 

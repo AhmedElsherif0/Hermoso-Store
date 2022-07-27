@@ -1,11 +1,11 @@
-import 'package:hermoso_store/ui/widgets/custom_widgets/header_text.dart';
-import 'package:hermoso_store/ui/widgets/register_form_body.dart';
 import 'package:flutter/material.dart';
+import 'package:hermoso_store/presentation/views/register_form_body.dart';
 import 'package:hermoso_store/utils/colors.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
 
 import '../../../cubit/home/settings/settings_cubit.dart';
 import '../../widgets/custom_widgets/custom_action_appbar.dart';
+import '../../widgets/custom_widgets/header_text.dart';
 
 class RegisterScreen extends StatelessWidget {
   static const routeName = '/register_screen';

@@ -2,9 +2,8 @@ import 'package:hermoso_store/cubit/authUser/auth_users_cubit.dart';
 import 'package:hermoso_store/cubit/home/categories/categories_cubit.dart';
 import 'package:hermoso_store/data/local_data/shared_preferences.dart';
 import 'package:hermoso_store/data/service/dio_service.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/login_screen.dart';
-import 'package:hermoso_store/ui/screens/home/home_page.dart';
-import 'package:hermoso_store/ui/screens/onboard_screen.dart';
+import 'package:hermoso_store/presentation/screens/auth_Screens/login_screen.dart';
+import 'package:hermoso_store/presentation/screens/home/home_page.dart';
 import 'package:hermoso_store/utils/constants.dart';
 import 'package:hermoso_store/utils/routes.dart';
 import 'package:hermoso_store/utils/themes.dart';
@@ -15,6 +14,7 @@ import 'cubit/home/favorite_cubit/favorite_cubit.dart';
 import 'cubit/home/home_cubit.dart';
 import 'cubit/home/products/products_cubit.dart';
 import 'cubit/home/settings/settings_cubit.dart';
+import 'presentation/screens/onboard_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

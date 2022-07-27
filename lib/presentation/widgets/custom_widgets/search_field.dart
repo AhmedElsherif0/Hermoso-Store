@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/colors.dart';
-import '../../utils/responsive_size.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/responsive_size.dart';
 
 class SearchField extends StatelessWidget {
   const SearchField({

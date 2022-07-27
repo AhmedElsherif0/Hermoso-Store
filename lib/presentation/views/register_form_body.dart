@@ -1,14 +1,15 @@
 import 'package:hermoso_store/cubit/authUser/auth_users_cubit.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/login_screen.dart';
-import 'package:hermoso_store/ui/screens/home/home_page.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/loading_widget.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/password_icon.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/row_text_and_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hermoso_store/ui/widgets/show_dialog.dart';
-import 'custom_widgets/custom_elevated_button.dart';
-import 'custom_widgets/custom_form_field.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/custom_elevated_button.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/custom_form_field.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/loading_widget.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/password_icon.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/row_text_and_button.dart';
+import 'package:hermoso_store/presentation/widgets/show_dialog.dart';
+import '../screens/auth_Screens/login_screen.dart';
+import '../screens/home/home_page.dart';
+
 
 class RegisterFormBody extends StatefulWidget {
   const RegisterFormBody({Key? key}) : super(key: key);

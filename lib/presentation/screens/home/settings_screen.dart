@@ -2,19 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/login_screen.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_action_appbar.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_form_field.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_text_button.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/loading_widget.dart';
 import 'package:hermoso_store/utils/colors.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
 import '../../../cubit/authUser/auth_users_cubit.dart';
 import '../../../cubit/home/settings/settings_cubit.dart';
 import '../../../data/local_data/shared_preferences.dart';
+import '../../widgets/custom_widgets/custom_action_appbar.dart';
 import '../../widgets/custom_widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_widgets/custom_elevated_button.dart';
+import '../../widgets/custom_widgets/custom_form_field.dart';
+import '../../widgets/custom_widgets/custom_text_button.dart';
+import '../../widgets/custom_widgets/loading_widget.dart';
 import '../../widgets/show_dialog.dart';
+import '../auth_Screens/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);

@@ -1,19 +1,21 @@
 import 'package:hermoso_store/model/auth_model/auth_model.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/forget_password.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/register_screen.dart';
-import 'package:hermoso_store/ui/screens/home/home_page.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_outline_button.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_text_button.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/password_icon.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/row_text_and_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hermoso_store/ui/widgets/show_dialog.dart';
+import 'package:hermoso_store/presentation/widgets/show_dialog.dart';
 import '../../cubit/authUser/auth_users_cubit.dart';
-import 'custom_widgets/custom_elevated_button.dart';
-import 'custom_widgets/custom_form_field.dart';
+import '../screens/auth_Screens/forget_password.dart';
+import '../screens/auth_Screens/register_screen.dart';
+import '../screens/home/home_page.dart';
+
 import 'package:flutter/material.dart';
 
-import 'custom_widgets/loading_widget.dart';
+import '../widgets/custom_widgets/custom_elevated_button.dart';
+import '../widgets/custom_widgets/custom_form_field.dart';
+import '../widgets/custom_widgets/custom_outline_button.dart';
+import '../widgets/custom_widgets/custom_text_button.dart';
+import '../widgets/custom_widgets/loading_widget.dart';
+import '../widgets/custom_widgets/password_icon.dart';
+import '../widgets/custom_widgets/row_text_and_button.dart';
+
 
 class LoginFormBody extends StatefulWidget {
   const LoginFormBody({Key? key}) : super(key: key);
@@ -57,9 +59,10 @@ class _LoginFormBodyState extends State<LoginFormBody> with ShowAlertMixin {
             //    showMeAlertDialog(context, state.error.toString());
           }
         }, builder: (context, state) {
-          return state is LoginLoadingState
-              ? const LoadingWidget()
-              : Form(
+          if (state is LoginLoadingState) {
+            return const LoadingWidget();
+          } else {
+            return Form(
                   key: _formKey,
                   child: Column(
                     children: [
@@ -133,6 +136,7 @@ class _LoginFormBodyState extends State<LoginFormBody> with ShowAlertMixin {
                     ],
                   ),
                 );
+          }
         }),
       ),
     );

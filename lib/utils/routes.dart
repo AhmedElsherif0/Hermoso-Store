@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hermoso_store/model/products/product_model.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/forget_password.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/login_screen.dart';
-import 'package:hermoso_store/ui/screens/auth_Screens/register_screen.dart';
-import 'package:hermoso_store/ui/screens/home/card_screen.dart';
-import 'package:hermoso_store/ui/screens/home/home_page.dart';
-import 'package:hermoso_store/ui/screens/home/notification_screen.dart';
-import 'package:hermoso_store/ui/screens/onboard_screen.dart';
+
+import '../presentation/screens/auth_Screens/forget_password.dart';
+import '../presentation/screens/auth_Screens/login_screen.dart';
+import '../presentation/screens/auth_Screens/register_screen.dart';
+import '../presentation/screens/home/card_screen.dart';
+import '../presentation/screens/home/home_page.dart';
+import '../presentation/screens/home/notification_screen.dart';
+import '../presentation/screens/onboard_screen.dart';
+
 
 class Routes {
   final productModel  = const RouteSettings().arguments as ProductModel;

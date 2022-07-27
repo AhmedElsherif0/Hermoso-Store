@@ -1,8 +1,10 @@
-import 'package:hermoso_store/ui/widgets/custom_widgets/price_and_discount.dart';
 import 'package:hermoso_store/utils/colors.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
 import 'package:hermoso_store/utils/style.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/custom_widgets/price_and_discount.dart';
+
 
 class ProductCard extends StatelessWidget {
   const ProductCard(

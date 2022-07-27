@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hermoso_store/cubit/home/categories/categories_cubit.dart';
 import 'package:hermoso_store/model/categories_model/categories_data_model.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/empty_screen.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/loading_widget.dart';
+import 'package:hermoso_store/presentation/views/product_card.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/show_snack_bar.dart';
 
 import '../../../utils/responsive_size.dart';
-import '../../widgets/product_card.dart';
+import '../../widgets/custom_widgets/empty_screen.dart';
+import '../../widgets/custom_widgets/loading_widget.dart';
 import '../../widgets/show_dialog.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -17,7 +18,8 @@ class CategoriesScreen extends StatefulWidget {
   State<CategoriesScreen> createState() => _CategoriesScreenState();
 }
 
-class _CategoriesScreenState extends State<CategoriesScreen>with ShowAlertMixin {
+class _CategoriesScreenState extends State<CategoriesScreen>
+    with ShowSnackBar, ShowAlertMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -31,7 +33,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>with ShowAlertMixin 
     return BlocConsumer<CategoriesCubit, CategoriesStates>(
       listener: (context, state) {
         if (state is CategoriesErrorState) {
-          showToast(context, 'Please Check Your Network Connection');
+          showSnackBar(context, 'Please Check Your Network Connection');
           print('Categories Screen :${state.error.toString()}');
         }
       },
@@ -44,8 +46,8 @@ class _CategoriesScreenState extends State<CategoriesScreen>with ShowAlertMixin 
             ? Scaffold(
                 body: Center(
                   child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.getScreenWidth(8)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.getScreenWidth(8)),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

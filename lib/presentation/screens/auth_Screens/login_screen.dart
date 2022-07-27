@@ -1,9 +1,10 @@
 import 'package:hermoso_store/cubit/home/settings/settings_cubit.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/custom_action_appbar.dart';
-import 'package:hermoso_store/ui/widgets/login_form_body.dart';
-import 'package:hermoso_store/ui/widgets/custom_widgets/header_text.dart';
 import 'package:flutter/material.dart';
+import 'package:hermoso_store/presentation/views/login_form_body.dart';
 import 'package:hermoso_store/utils/colors.dart';
+
+import '../../widgets/custom_widgets/custom_action_appbar.dart';
+import '../../widgets/custom_widgets/header_text.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/Login-Screen';
