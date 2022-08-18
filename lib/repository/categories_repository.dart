@@ -2,13 +2,20 @@ import 'package:dio/dio.dart';
 import 'package:hermoso_store/data/service/dio_service.dart';
 import 'package:hermoso_store/utils/constants.dart';
 
+import '../model/categories_model/categories_model.dart';
+
 abstract class CategoriesRepository {
-  Future getCategories();
+  Future<CategoriesModel> getCategories();
 }
 
 class MockCategoriesRepo implements CategoriesRepository {
   @override
-  Future<Response?> getCategories() async {
-    return await DioService.getResponse(url:'categories',lang: en);
+  Future<CategoriesModel> getCategories() async {
+    Response? response = await DioService.getResponse(url:'categories',lang: en);
+    CategoriesModel categoriesModel = CategoriesModel.fromJson(response?.data);
+
+    return categoriesModel;
+
+
   }
 }

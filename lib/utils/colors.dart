@@ -2,18 +2,27 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-const kWhiteColor = Color(0xffffffff);
-const kCoWhiteColor = Color(0xe0fafafa);
-const kOffWhiteColor = Color(0xfff8f0e3);
-const kIconsColor = Color(0xffBDBDBD);
-const kDetailsColor = Color(0xf8f7f8f7);
-const kBackColor = Color(0xffF1F0F0);
-const kBackButtonColor = Color(0xffcbcbcb);
+class AppColor {
+  static const kWhiteColor = Color(0xffffffff);
+  static const kCoWhiteColor = Color(0xe0fafafa);
+  static const kOffWhiteColor = Color(0xfff8f0e3);
+  static const kIconsColor = Color(0xffBDBDBD);
 
-const kDarkGreyColor = Color(0xff424242);
+  static const kDetailsColor = Color(0xf8f7f8f7);
+  static const kBackColor = Color(0xffF1F0F0);
+  static const kBackButtonColor = Color(0xffcbcbcb);
+
+  static const kGreyColor = Color(0xff656262);
+  static const kDarkGreyColor = Color(0xff424242);
+  static const kVeryDarkGreyColor = Color(0xff2b2b2b);
+  static const kBlackColor = Color(0xff000000);
+  static const kBlack54 = Color(0x8A000000);
+  static const kBlack26 = Color(0x42000000);
 
 
-const kSecondary = Color(0xff6200EE);
-const kSecondaryContainer = Color(0xff00ceb8);
-const kPrimary = Color(0xff6ae7d9);
-const kGreyColor = Color(0xff656262);
+
+
+  static const kSecondaryColor = Color(0xff6200EE);
+  static const kSecondaryContainerColor = Color(0xff00ceb8);
+  static const kPrimaryColor = Color(0xff6ae7d9);
+}

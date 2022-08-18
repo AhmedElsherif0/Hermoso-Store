@@ -3,23 +3,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hermoso_store/utils/colors.dart';
 
 const TextStyle kHermosoLogo =
-    TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: kPrimary);
+    TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: AppColor.kPrimaryColor);
 
 TextStyle kMainText =
     GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.bold);
 
-const TextStyle kDetailsTitleStyle = TextStyle(fontSize: 16, color: kOffWhiteColor);
+const TextStyle kDetailsTitleStyle = TextStyle(fontSize: 16, color:AppColor. kOffWhiteColor);
 
 const TextStyle kDiscountStyle = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 14,
-    color: kSecondary,
+    color:  AppColor.kSecondaryColor,
     decoration: TextDecoration.lineThrough);
 
 const TextStyle kDetailsDiscountStyle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: kSecondary,
+    color: AppColor.kSecondaryColor,
     decoration: TextDecoration.lineThrough);
 
 const TextStyle kTitleCardStyle =

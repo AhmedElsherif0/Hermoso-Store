@@ -13,12 +13,12 @@ abstract class ProductsRepository {
 }
 
 class MockProductsRepo extends ProductsRepository {
+  HomeModel _homeModel = HomeModel();
 
   @override
   Future<HomeModel> getProductsData() async {
     Response? _response = await DioService.getResponse(
         url: 'home', authorizationToken: token, lang: en);
-    HomeModel _homeModel = HomeModel();
     if (_response?.data != null) _homeModel = HomeModel.fromJson(_response?.data);
     return _homeModel;
   }
@@ -27,7 +27,6 @@ class MockProductsRepo extends ProductsRepository {
   Future<HomeModel> getBannersData() async {
     Response? _response = await DioService.getResponse(
         url: 'home', authorizationToken: token, lang: en);
-    HomeModel _homeModel = HomeModel();
     if (_response?.data != null) _homeModel = HomeModel.fromJson(_response?.data);
     return _homeModel;
   }
@@ -41,7 +40,7 @@ class MockProductsRepo extends ProductsRepository {
         data: {'product_id': productId});
     FavoriteModel _favoriteModel = FavoriteModel();
     if (_response?.data != null) {
-      return _favoriteModel = FavoriteModel.fromJson(_response?.data);
+       _favoriteModel = FavoriteModel.fromJson(_response?.data);
     }
     return _favoriteModel;
   }

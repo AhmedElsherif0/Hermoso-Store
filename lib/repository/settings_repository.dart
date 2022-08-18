@@ -5,7 +5,7 @@ import 'package:hermoso_store/model/auth_model/auth_model.dart';
 import 'package:hermoso_store/utils/constants.dart';
 
 abstract class SettingsRepository {
-  Future<AuthModel> loginOut();
+  Future<String?> loginOut();
 
   Future<AuthModel> getProfile();
 
@@ -13,40 +13,53 @@ abstract class SettingsRepository {
 }
 
 class MockSettingsRepo implements SettingsRepository {
+  AuthModel _authModel = AuthModel();
+
   @override
-  Future<AuthModel> loginOut() async {
-    token = await SharedPref.getData(key: 'token');
+  Future<String?> loginOut() async {
+    token = SharedPref.getData(key: 'token');
     Response? _response = await DioService.postResponse(
         url: 'logout', authorizationToken: token, lang: en);
-    AuthModel _authModel = AuthModel();
-    if (_response!.data != null) _authModel = AuthModel.fromJson(_response.data);
-    return _authModel;
+    _authModel = AuthModel.fromJsonLogout(_response?.data);
+    print(
+        ' loginOut repository error : ${_authModel.data.token.toString()}');
+    await SharedPref.removeData(key: 'token');
+    token =null;
+    return _authModel.message;
   }
 
   @override
   Future<AuthModel> getProfile() async {
-    token = await SharedPref.getData(key: 'token');
-    Response? response = await DioService.getResponse(
+    token = SharedPref.getData(key: 'token');
+    Response? _response = await DioService.getResponse(
         url: 'profile', authorizationToken: token, lang: en);
-
-    AuthModel authModel = AuthModel();
-    if (response?.data != null) authModel = AuthModel.fromJson(response?.data);
-    return authModel;
+    if (_response?.data != null) {
+      _authModel = AuthModel.fromJson(_response?.data);
+      print(
+          'settings repository getProfile  : ${_response?.statusMessage.toString()}');
+    }
+    return _authModel;
   }
 
   @override
   Future<AuthModel> updateProfile(
       String name, String email, String phone) async {
-    token = await SharedPref.getData(key: 'token');
-    Response? response = await DioService.putResponse(
+    token = SharedPref.getData(key: 'token');
+    Response? _response = await DioService.putResponse(
         url: 'update-profile',
         lang: en,
-        data: {
-          'name': name,
-          'email': email, 'phone' : phone},
+        data: {'name': name, 'email': email, 'phone': phone},
         authorizationToken: token);
-    AuthModel authModel = AuthModel();
-    if (response?.data != null) authModel = AuthModel.fromJson(response?.data);
-    return authModel;
+    if (_response?.data != null) {
+      _authModel = AuthModel.fromJson(_response?.data);
+      if (_authModel.status = true) {
+        _authModel.data.name = name;
+        _authModel.data.email = email;
+        _authModel.data.phone = phone;
+      }
+      print(
+          ' settings repository updateProfile  error : ${_response?.statusMessage.toString()}');
+    }
+    return _authModel;
   }
 }

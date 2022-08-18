@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hermoso_store/model/products/product_model.dart';
+import 'package:hermoso_store/presentation/screens/home/product_details_screen.dart';
 
 import '../presentation/screens/auth_Screens/forget_password.dart';
 import '../presentation/screens/auth_Screens/login_screen.dart';
 import '../presentation/screens/auth_Screens/register_screen.dart';
-import '../presentation/screens/home/card_screen.dart';
-import '../presentation/screens/home/home_page.dart';
+import '../presentation/screens/home/cart_screen.dart';
+import '../presentation/screens/home/home_screen.dart';
 import '../presentation/screens/home/notification_screen.dart';
 import '../presentation/screens/onboard_screen.dart';
 
@@ -19,7 +20,7 @@ class Routes {
     ForgetPassword.routeName: (ctx) => const ForgetPassword(),
     RegisterScreen.routeName: (ctx) => const RegisterScreen(),
     HomeScreen.routeName: (ctx) => const HomeScreen(),
-    CardScreen.routeName: (ctx) => const CardScreen(),
+    CartScreen.routeName: (ctx) => const CartScreen(),
     NotificationsScreen.routeName: (ctx) => const NotificationsScreen(),
   };
 }
