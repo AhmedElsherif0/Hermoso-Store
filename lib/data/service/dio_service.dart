@@ -5,21 +5,25 @@ class DioService {
 
   static init() {
     dio = Dio(BaseOptions(
-      baseUrl: 'https://student.valuxapps.com/api/',
-      receiveDataWhenStatusError: true,
-      connectTimeout: 40000,
-      receiveTimeout: 40000,
-      sendTimeout: 40000,
-    ));
+        baseUrl: 'https://student.valuxapps.com/api/',
+        receiveDataWhenStatusError: true,
+        connectTimeout: 60000,
+        receiveTimeout: 60000,
+        sendTimeout: 60000,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+          'Access-Control-Allow-Headers': 'X-Requested-With,content-type',
+          'Access-Control-Allow-Credentials': true
+        }));
   }
-
 
   static Future<Response?> getResponse(
       {required String url,
       Map<String, dynamic>? queryParameters,
       String? lang = 'en',
       String? authorizationToken}) async {
-    dio?.options.headers=    {
+    dio?.options.headers = {
       'Content-Type': 'application/json',
       'lang': lang,
       'Authorization': authorizationToken
@@ -37,7 +41,7 @@ class DioService {
       Map<String, dynamic> query = const {'': ''},
       String? lang = 'en',
       String? authorizationToken}) async {
-    dio?.options.headers= {
+    dio?.options.headers = {
       'Content-Type': 'application/json',
       'lang': lang,
       'Authorization': authorizationToken

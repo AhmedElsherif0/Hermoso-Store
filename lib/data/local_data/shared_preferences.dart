@@ -30,7 +30,7 @@ class SharedPref {
     return _sharedPreferences?.get(key);
   }
 
-  static dynamic getBoolData({required dynamic key})  {
+  static bool? getBoolData({required dynamic key})  {
     return _sharedPreferences?.getBool(key);
   }
 
