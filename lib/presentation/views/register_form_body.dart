@@ -1,4 +1,3 @@
-import 'package:hermoso_store/cubit/authUser/auth_users_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hermoso_store/presentation/widgets/custom_widgets/custom_elevated_button.dart';
@@ -7,9 +6,11 @@ import 'package:hermoso_store/presentation/widgets/custom_widgets/loading_widget
 import 'package:hermoso_store/presentation/widgets/custom_widgets/password_icon.dart';
 import 'package:hermoso_store/presentation/widgets/custom_widgets/row_text_and_button.dart';
 import 'package:hermoso_store/presentation/widgets/show_dialog.dart';
+import 'package:sizer/sizer.dart';
+import '../../domain/cubit/authUser/auth_users_cubit.dart';
 import '../screens/auth_Screens/login_screen.dart';
-import '../screens/home/home_page.dart';
-
+import '../screens/home/home_screen.dart';
+import 'auth_integrations_buttons.dart';
 
 class RegisterFormBody extends StatefulWidget {
   const RegisterFormBody({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class RegisterFormBody extends StatefulWidget {
 }
 
 class _RegisterFormBodyState extends State<RegisterFormBody>
-    with ShowAlertMixin {
+    with AlertDialogMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final Map<String, String>? _authMode = {
@@ -54,12 +55,12 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
           if (state.authModel.status == true) {
             Navigator.pushReplacementNamed(context, HomeScreen.routeName);
           } else {
-            showMeDialog(context, state.authModel.message.toString(),
+            showAlertDialog(context, state.authModel.message.toString(),
                 'Enter the Valid Email');
           }
         }
         if (state is RegisterErrorState) {
-          showMeDialog(
+          showAlertDialog(
               context, state.error.toString(), 'Enter the Valid Email');
         }
       },
@@ -69,7 +70,7 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
         }
         return SingleChildScrollView(
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
+            margin: EdgeInsets.only(top: 0.5.h),
             child: Center(
               child: Form(
                 key: _formKey,
@@ -89,7 +90,7 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
                         _authMode?['name'] = value!;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 2.h),
                     CustomFormField(
                       labelText: 'Email',
                       hintText: 'Enter Your Email',
@@ -106,7 +107,7 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
                         _authMode?['email'] = value!;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 2.h),
                     CustomFormField(
                       labelText: 'Phone',
                       hintText: 'Enter Your Phone',
@@ -123,7 +124,7 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
                         _authMode?['phone'] = value!;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 2.h),
                     CustomFormField(
                       textInputType: TextInputType.visiblePassword,
                       obscureText:
@@ -131,16 +132,17 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
                       labelText: 'Password',
                       hintText: 'Enter Your Password',
                       controller: _passwordController,
+                      onPressIcon: state is RegisterLoadingState
+                          ? () {}
+                          : () {
+                              _registerCubit().isPasswordRegistered =
+                                  !_registerCubit().isPasswordRegistered;
+                              _registerCubit().changeRegisterPassword(
+                                  _registerCubit().isPasswordRegistered);
+                            },
                       suffixIcon: PasswordIcon(
-                          isPassword: _registerCubit().isPasswordRegistered,
-                          onPressed: state is RegisterLoadingState
-                              ? () {}
-                              : () {
-                                  _registerCubit().isPasswordRegistered =
-                                      !_registerCubit().isPasswordRegistered;
-                                  _registerCubit().changeRegisterPassword(
-                                      _registerCubit().isPasswordRegistered);
-                                }),
+                        isPassword: _registerCubit().isPasswordRegistered,
+                      ),
                       validator: (value) {
                         if (value.isEmpty || value.length < 6) {
                           return 'Password is too short!';
@@ -151,7 +153,7 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
                         _authMode?['password'] = value!;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 2.h),
                     CustomFormField(
                       textInputType: TextInputType.visiblePassword,
                       obscureText: _registerCubit().isPasswordConfirmRegister
@@ -160,18 +162,17 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
                       labelText: 'Confirm Password',
                       hintText: 'Re-enter Your Password',
                       controller: _confirmPassController,
+                      onPressIcon: state is RegisterLoadingState
+                          ? () {}
+                          : () {
+                              _registerCubit().isPasswordConfirmRegister =
+                                  _registerCubit().isPasswordConfirmRegister ==
+                                      false;
+                              _registerCubit().changeRegisterPassword(
+                                  _registerCubit().isPasswordConfirmRegister);
+                            },
                       suffixIcon: PasswordIcon(
                         isPassword: _registerCubit().isPasswordConfirmRegister,
-                        onPressed: state is RegisterLoadingState
-                            ? () {}
-                            : () {
-                                _registerCubit().isPasswordConfirmRegister =
-                                    _registerCubit()
-                                            .isPasswordConfirmRegister ==
-                                        false;
-                                _registerCubit().changeRegisterPassword(
-                                    _registerCubit().isPasswordConfirmRegister);
-                              },
                       ),
                       validator: (value) {
                         if (value.isEmpty || value.length < 6) {
@@ -185,14 +186,15 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
                         _authMode?['confirm'] = value!;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 2.h),
                     if (state is RegisterLoadingState)
                       const Center(child: CircularProgressIndicator()),
                     CustomElevatedButton(
                         text: 'Sign Up',
-                        onPress: state is RegisterLoadingState
+                        onPressed: state is RegisterLoadingState
                             ? null
                             : _registerUser),
+                    SizedBox(height: 1.h),
                     RowTextAndButton(
                       title: 'Already had an Account?',
                       text: 'Sign IN',
@@ -200,7 +202,7 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
                           ? () {}
                           : () => Navigator.of(context)
                               .pushReplacementNamed(LoginScreen.routeName),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -215,10 +217,10 @@ class _RegisterFormBodyState extends State<RegisterFormBody>
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       _registerCubit().userRegister(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-          _nameController.text.trim(),
-          _phoneController.text.trim());
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+          name: _nameController.text.trim(),
+          phone: _phoneController.text.trim());
       _formKey.currentState?.save();
     }
     _formKey.currentState?.save();

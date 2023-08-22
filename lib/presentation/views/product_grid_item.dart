@@ -1,108 +1,129 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hermoso_store/presentation/widgets/custom_widgets/hero_animation.dart';
 import 'package:hermoso_store/utils/colors.dart';
-import 'package:hermoso_store/utils/responsive_size.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../utils/style.dart';
+import '../widgets/custom_widgets/cached_network_image.dart';
 
 class ProductGridItem extends StatelessWidget {
   const ProductGridItem({
     Key? key,
     required this.onGestureTap,
-    required this.onFavorite,
+    required this.onPressFavorite,
     required this.price,
     required this.oldPrice,
     required this.title,
-    required this.imageUrl, required this.favoriteIcon,
+    required this.networkImage,
+    required this.favoriteIcon,
+    required this.onPressCart,
+    required this.cartIcon,
   }) : super(key: key);
 
   final void Function() onGestureTap;
-
-  final String imageUrl;
-  final void Function() onFavorite;
+  final String networkImage;
+  final void Function() onPressFavorite;
+  final void Function() onPressCart;
   final num? price;
-  final IconData favoriteIcon ;
-
+  final IconData favoriteIcon;
+  final IconData cartIcon;
   final num? oldPrice;
-
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onGestureTap,
-      child: Container(
+    return SizedBox(
+      width: 20.w,
+      height: 20.w,
+      child: DecoratedBox(
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimaryContainer,
-            borderRadius: BorderRadius.circular(14)),
-        width: SizeConfig.getScreenHeight(200),
-        height: SizeConfig.getScreenHeight(200),
-        child: GridTile(
-          header: Container(
-            alignment: Alignment.topRight,
-            child: IconButton(
-                icon: Icon(favoriteIcon),
-                color: kSecondaryContainer,
-                onPressed: onFavorite),
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(SizeConfig.getScreenHByW(8, 7)),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(12)),
-              child: HeroAnimation(
-                  tag: imageUrl, imageUrl: imageUrl, fit: BoxFit.contain),
+            borderRadius: BorderRadius.circular(2.h)),
+        child: Column(
+          children: [
+            /// Favorite Icon
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  const Spacer(flex: 9),
+                  Expanded(
+                    flex: 2,
+                    child: IconButton(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.zero,
+                        icon: Icon(favoriteIcon),
+                        iconSize: 18.sp,
+                        highlightColor: Colors.transparent,
+                        color: AppColor.kSecondaryContainerColor,
+                        onPressed: onPressFavorite),
+                  ),
+                ],
+              ),
             ),
-          ),
-          footer: GridTileBar(
-            leading: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("\$${price}",
-                    style: Theme.of(context).textTheme.bodyText2,
-                    textAlign: TextAlign.start),
-                if (price != oldPrice)
-                  Text("\$${oldPrice}",
-                      style: kDiscountStyle, textAlign: TextAlign.start),
-              ],
+
+            /// Network Image
+            Expanded(
+              flex: 10,
+              child: GestureDetector(
+                onTap: onGestureTap,
+                child: Hero(
+                  tag: networkImage,
+                  child: CachedImage(imageUrl: networkImage),
+                ),
+              ),
             ),
-            title: Text(title,
-                style: Theme.of(context).textTheme.bodyText1,
-                overflow: TextOverflow.clip,
-                maxLines: 1,
-                textAlign: TextAlign.start),
-            trailing: IconButton(
-                icon: const Icon(Icons.add_shopping_cart, size: 22),
-                color: kSecondaryContainer,
-                onPressed: () {},
-                alignment: Alignment.bottomRight),
-          ), /* GridTileBar(
-             trailing: IconButton(
-              icon: const Icon(Icons.add_shopping_cart),
-              color: theme.accentColor,
-              onPressed: () async {
-                try {
-                  cart.addItem(product.productId, product.title, product.price);
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: const Text(
-                      'Added Item to The Card',
-                      textAlign: TextAlign.center,
+            Expanded(
+              flex: 3,
+              child: Row(
+                children: [
+                  const Spacer(),
+                  FittedBox(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "\$${price}",
+                            style: Theme.of(context).textTheme.bodyText2,
+                            textAlign: TextAlign.start,
+                            maxLines: 1,
+                          ),
+                          if (price != oldPrice)
+                            Text(
+                              "\$${oldPrice}",
+                              style: kDiscountStyle.copyWith(fontSize: 11.sp),
+                              textAlign: TextAlign.start,
+                              maxLines: 1,
+                            ),
+                        ],
+                      ),
                     ),
-                    duration: const Duration(seconds: 2),
-                    action: SnackBarAction(
-                        label: 'Undo',
-                        onPressed: () {
-                          cart.removeSingleItem(product.productId);
-                        }),
-                  ));
-                } catch (error) {
-                  print(error.toString());
-                }
-              },
+                  ),
+                  const Spacer(),
+                  Expanded(
+                    flex: 18,
+                    child: Text(title,
+                        style: Theme.of(context).textTheme.bodyText1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start),
+                  ),
+                  const Spacer(),
+                  Expanded(
+                    flex: 6,
+                    child: IconButton(
+                        padding: EdgeInsets.zero,
+                        iconSize: 16.sp,
+                        highlightColor: Colors.transparent,
+                        icon: Icon(cartIcon, size: 16.sp),
+                        color: AppColor.kSecondaryContainerColor,
+                        onPressed: onPressCart),
+                  ),
+                ],
+              ),
             ),
-          ),*/
+          ],
         ),
       ),
     );

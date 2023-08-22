@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData = const MediaQueryData();
-  static double screenWidth = 360.0;
+  static double screenWidth = 392.72;
 
-  static double screenHeight = 712.0;
+  static double screenHeight = 829.09;
 
   static double? defaultSize;
   static Orientation? orientation;
@@ -17,15 +17,15 @@ class SizeConfig {
   }
 
   static double getScreenHeight(double inputHeight) {
-    return (inputHeight / 712.0) * screenHeight;
+    return (inputHeight / 829.0) * screenHeight;
   }
 
   static double getScreenHByW(double inputHeight, double inputWidth) {
-    return ((inputWidth * inputHeight) / 712.0) * screenHeight;
+    return ((inputWidth * inputHeight) / 829.0) * screenHeight;
   }
 
   static double getScreenWidth(double inputWidth) {
-    return (inputWidth / 360.0) * screenWidth;
+    return (inputWidth / 392.72) * screenWidth;
   }
   static bool isLandScape() => orientation == Orientation.landscape;
 

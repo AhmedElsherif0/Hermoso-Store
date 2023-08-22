@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hermoso_store/cubit/home/categories/categories_cubit.dart';
-import 'package:hermoso_store/model/categories_model/categories_data_model.dart';
-import 'package:hermoso_store/presentation/views/product_card.dart';
-import 'package:hermoso_store/presentation/widgets/custom_widgets/show_snack_bar.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/categorry_item_card.dart';
+import 'package:hermoso_store/presentation/widgets/show_snack_bar.dart';
 
-import '../../../utils/responsive_size.dart';
+import '../../../domain/cubit/global_cubit/categories/categories_cubit.dart';
 import '../../widgets/custom_widgets/empty_screen.dart';
 import '../../widgets/custom_widgets/loading_widget.dart';
 import '../../widgets/show_dialog.dart';
@@ -19,13 +16,17 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen>
-    with ShowSnackBar, ShowAlertMixin {
+    with SnackBarMixin, AlertDialogMixin {
   @override
   void didChangeDependencies() {
+    if (_categoriesList(context).isEmpty) _categoriesCubit(context).getCategories();
     super.didChangeDependencies();
-    if (_categoriesList(context).categoryList.isEmpty) {
-      return _categoriesCubit(context).getCategories();
-    }
+  }
+
+  @override
+  void initState() {
+    if (_categoriesList(context).isEmpty) _categoriesCubit(context).getCategories();
+    super.initState();
   }
 
   @override
@@ -38,37 +39,27 @@ class _CategoriesScreenState extends State<CategoriesScreen>
         }
       },
       builder: (context, state) {
-        if (state is CategoriesLoadingState) {
-          return const LoadingWidget();
-        }
+        if (state is CategoriesLoadingState) const LoadingWidget();
 
         return state is CategoriesSuccessState
             ? Scaffold(
                 body: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.getScreenWidth(8)),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount:
-                                  _categoriesList(context).categoryList.length,
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) => ProductCard(
-                                cardIcon: const Icon(null),
-                                image:
-                                    '${_categoriesList(context).categoryList[index].image}',
-                                title:
-                                    '${_categoriesList(context).categoryList[index].name}',
-                                onPressedFavorite: () {},
-                                onTapInkWell: () {},
-                                // isFavorite: CategoriesCubit.get(context).changeFavorite(),
-                              ),
-                            ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: _categoriesList(context).length,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) => CategoryItemCard(
+                            image: '${_categoriesList(context)[index].image}',
+                            title: '${_categoriesList(context)[index].name}',
+                            // isFavorite: CategoriesCubit.get(context).changeFavorite(),
                           ),
-                        ]),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -77,21 +68,8 @@ class _CategoriesScreenState extends State<CategoriesScreen>
     );
   }
 
-  CategoriesDataModel _categoriesList(context) {
-    return _categoriesCubit(context).categoriesModel.data;
-  }
+  _categoriesList(context) =>
+      _categoriesCubit(context).categoriesModel.data.categoryList;
 
   CategoriesCubit _categoriesCubit(context) => CategoriesCubit.get(context);
-
-  void _showMeAlertDialog(BuildContext context, state) {
-    showAlertDialog(
-      context: context,
-      title: state,
-      actionButton: [
-        TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'))
-      ],
-    );
-  }
 }

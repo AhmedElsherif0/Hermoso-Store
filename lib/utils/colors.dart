@@ -19,10 +19,15 @@ class AppColor {
   static const kBlack54 = Color(0x8A000000);
   static const kBlack26 = Color(0x42000000);
 
+  static const List<Color> lightGreenLinear = [Color(0xFFCEF5E6), Color(0xff7bf5e7)];
+  static const List<Color> darkGreenLinear = [kDarkGreyColor, Color(0xff00ceb8)];
 
-
+  static const Color blue = Color(0xff1976D2);
+  static const Color solidTextColor = Color(0xBD000000);
+  static const Color red = Color(0xffF44336);
 
   static const kSecondaryColor = Color(0xff6200EE);
   static const kSecondaryContainerColor = Color(0xff00ceb8);
   static const kPrimaryColor = Color(0xff6ae7d9);
+  static const kPrimaryColor2 = Color(0xFFCEF5E6);
 }

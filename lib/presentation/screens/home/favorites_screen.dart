@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hermoso_store/cubit/home/favorite_cubit/favorite_cubit.dart';
-import 'package:hermoso_store/cubit/home/products/products_cubit.dart';
-import 'package:hermoso_store/model/favorite_model/favorite_datum.dart';
 import 'package:hermoso_store/presentation/views/product_card.dart';
-import 'package:hermoso_store/presentation/widgets/custom_widgets/show_snack_bar.dart';
-
+import 'package:hermoso_store/presentation/widgets/show_snack_bar.dart';
 import 'package:hermoso_store/utils/colors.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
-
-import '../../../cubit/home/settings/settings_cubit.dart';
+import '../../../domain/cubit/global_cubit/products/products_cubit.dart';
+import '../../../domain/cubit/global_cubit/settings/settings_cubit.dart';
 import '../../widgets/custom_widgets/custom_action_appbar.dart';
 import '../../widgets/custom_widgets/empty_screen.dart';
 import '../../widgets/custom_widgets/loading_widget.dart';
@@ -24,7 +19,8 @@ class FavoritesScreen extends StatefulWidget {
   State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
-class _FavoritesScreenState extends State<FavoritesScreen> with ShowSnackBar, ShowAlertMixin {
+class _FavoritesScreenState extends State<FavoritesScreen>
+    with SnackBarMixin, AlertDialogMixin {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -35,21 +31,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> with ShowSnackBar, Sh
 
   @override
   void didChangeDependencies() {
-    _favoriteCubit(context).getFavorites();
     super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(covariant FavoritesScreen oldWidget) {
-    _favoriteCubit(context).getFavorites();
-    super.didUpdateWidget(oldWidget);
+    isGetFavorite(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: changeAppAndStatusBarColor(
-          isDark: _settingsCubit(context).isDarkMode, color: kBackColor),
+      appBar: CustomAppBar().changeAppAndStatusBarColor(
+          isDark: _settingsCubit(context).isDarkMode,
+          color: AppColor.kBackColor),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.getScreenWidth(9)),
         child: Column(
@@ -60,76 +51,61 @@ class _FavoritesScreenState extends State<FavoritesScreen> with ShowSnackBar, Sh
             SizedBox(height: SizeConfig.getScreenHeight(14)),
             SearchField(
               controller: _searchController,
-              onChanged: (value) {},
+              onChanged: (name) =>
+                  _productCubit(context).searchFavoriteByName(name),
             ),
             Expanded(
-                child: BlocConsumer<FavoriteCubit, FavoriteStates>(
-              listener: (context, state) {
-                if (state is FavoriteErrorState) {
-                  return showSnackBar(
-                      context, 'Please Check Your Network Connection');
-                }
-                if (state is FavoriteSuccessState) {
-                  return showSnackBar(context, 'Done!');
-                }
-              },
-              builder: (context, state) {
-                print('favorite screen builder is : ${state.toString()}');
-
-                if (state is FavoriteLoadingState) {
-                  return const LoadingWidget();
-                }
-                return _favoriteList(context).isEmpty
-                    ? state is FavoriteNetworkErrorState
-                        ? const EmptyScreen(text: 'Network occur an Error...')
-                        : const EmptyScreen(text: 'Empty Screen...')
-                    : ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: _favoriteList(context).length,
-                        itemBuilder: (context, index) => ProductCard(
-                          cardIcon:
-                              const Icon(Icons.add_shopping_cart_outlined),
-                          title: _favoriteList(context)[index]
-                              .favoriteProduct
-                              .name,
-                          oldPrice: _favoriteList(context)[index]
-                              .favoriteProduct
-                              .oldPrice,
-                          price: _favoriteList(context)[index]
-                              .favoriteProduct
-                              .price,
-                          onPressedFavorite: () {
-                            _productCubit(context).toggleFavoriteState(
-                                _favoriteList(context)[index]
-                                    .favoriteProduct
-                                    .id);
-                            _favoriteCubit(context).getFavorites();
-                            if (_productCubit(context).favoriteMap[
-                                    _favoriteList(context)[index]
-                                        .favoriteProduct
-                                        .id] ==
-                                true) {
-                              _favoriteCubit(context).removeFavoriteItem(
-                                  _favoriteList(context)[index].id);
-                              _favoriteList(context).removeWhere(
-                                  (element) => element.id == false);
-                            }
+              child: BlocConsumer<ProductsCubit, ProductsStates>(
+                listener: (context, state) {
+                  if (state is FavoriteErrorState) {
+                    return showSnackBar(
+                        context, 'Please Check Your Network Connection');
+                  }
+                  if (state is FavoriteSuccessState) {
+                    return showSnackBar(context, 'Done!');
+                  }
+                },
+                builder: (context, state) {
+                  print('favorite screen builder is : ${state.toString()}');
+                  if (state is FavoriteLoadingState) {
+                    return const LoadingWidget();
+                  }
+                  return _productCubit(context)
+                          .favoriteData
+                          .favoriteList
+                          .isNotEmpty
+                      ? ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: _searchController.text.isEmpty
+                              ? _favoriteList(context).length
+                              : _productCubit(context).favoriteMap.length,
+                          itemBuilder: (context, index) {
+                            final favoriteList =
+                                _favoriteList(context)[index].favoriteProduct;
+                            return ProductCard(
+                              cardIcon: const Icon(null),
+                              title: favoriteList.name,
+                              oldPrice: favoriteList.oldPrice,
+                              price: favoriteList.price,
+                              onPressedFavorite: () => _productCubit(context)
+                                  .onPressedFavorite(index),
+                              image: favoriteList.image,
+                              isFavorite: _productCubit(context).favoriteMap[
+                                          _favoriteList(context)[index]
+                                              .favoriteProduct
+                                              .id] ==
+                                      true
+                                  ? Icons.star
+                                  : Icons.star_border,
+                            );
                           },
-                          image: _favoriteList(context)[index]
-                                  .favoriteProduct
-                                  .image ??
-                              'assets/product-placeholder.png',
-                          isFavorite: _productCubit(context).favoriteMap[
-                                      _favoriteList(context)[index]
-                                          .favoriteProduct
-                                          .id] ==
-                                  true
-                              ? Icons.star
-                              : Icons.star_border,
-                        ),
-                      );
-              },
-            )),
+                        )
+                      : state is FavoriteNetworkErrorState
+                          ? const EmptyScreen(text: 'Network occur an Error...')
+                          : const EmptyScreen(text: 'Empty Screen...');
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -137,12 +113,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> with ShowSnackBar, Sh
   }
 }
 
-FavoriteCubit _favoriteCubit(context) {
-  return BlocProvider.of<FavoriteCubit>(context);
+void isGetFavorite(BuildContext context) {
+  if (_favoriteList(context).isEmpty) {
+    _productCubit(context).getFavorites();
+  }
 }
 
-List<FavoriteList> _favoriteList(context) {
-  return _favoriteCubit(context).favoriteList;
+_favoriteList(context) {
+  return _productCubit(context).favoriteData.favoriteList;
 }
 
 ProductsCubit _productCubit(context) {

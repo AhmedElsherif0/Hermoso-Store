@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../utils/colors.dart';
 import '../../../utils/responsive_size.dart';
@@ -8,33 +9,37 @@ class SearchField extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.onChanged,
+    this.isDark = true,
   }) : super(key: key);
 
   final TextEditingController controller;
   final void Function(String) onChanged;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 16, top: 8,bottom: 8),
-      decoration: BoxDecoration(
-        color: kDetailsColor,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: TextField(
-        controller: controller,
-        onChanged: onChanged,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(SizeConfig.getScreenHeight(12)),
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          hintText: "Search ",
-          hintStyle: const TextStyle(
-            color: Colors.grey,
-          ),
-          prefixIcon: const Icon(Icons.search,
-            color: kSecondaryContainer,
+    return Padding(
+      padding: const EdgeInsets.only(right: 6,left: 6,top: 2,bottom: 6),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: isDark ? AppColor.kDarkGreyColor : AppColor.kDetailsColor,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: TextField(
+          focusNode: FocusNode(canRequestFocus: false),
+          autofocus: false,
+          controller: controller,
+          onChanged: onChanged,
+          style: const TextStyle(color: AppColor.kBackButtonColor),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            hintText: "Search ",
+            hintStyle: TextStyle(
+                color: isDark ? AppColor.kCoWhiteColor : AppColor.kGreyColor),
+            prefixIcon: Icon(Icons.search,
+                color: AppColor.kSecondaryContainerColor, size: 16.sp),
           ),
         ),
       ),
