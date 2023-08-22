@@ -1,10 +1,12 @@
-import 'package:hermoso_store/model/cart_model/cart_item_model.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/cached_network_image.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/custom_circle_button.dart';
 import 'package:hermoso_store/utils/colors.dart';
 import 'package:hermoso_store/utils/responsive_size.dart';
 import 'package:hermoso_store/utils/style.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../data/model/cart_model/cart_item_model.dart';
 import '../widgets/custom_widgets/price_and_discount.dart';
 
 class CartItem extends StatelessWidget {
@@ -16,11 +18,10 @@ class CartItem extends StatelessWidget {
     required this.cartItemModel,
   }) : super(key: key);
 
-
   final VoidCallback? onPressIncrement;
   final VoidCallback? onPressDecrement;
   final void Function(DismissDirection)? onDismissed;
-  final CartItemModel cartItemModel ;
+  final CartItemModel cartItemModel;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +30,13 @@ class CartItem extends StatelessWidget {
         direction: DismissDirection.endToStart,
         background: DecoratedBox(
           decoration: const BoxDecoration(color: AppColor.kSecondaryColor),
-          child: Row(children: [
-            const Spacer(flex: 4),
-            Icon(Icons.delete, size: 20.sp, color: AppColor.kCoWhiteColor),
-            const Spacer(),
-          ]),
+          child: Row(
+            children: [
+              const Spacer(flex: 4),
+              Icon(Icons.delete, size: 20.sp, color: AppColor.kCoWhiteColor),
+              const Spacer(),
+            ],
+          ),
         ),
         onDismissed: onDismissed,
         child: Card(
@@ -46,6 +49,7 @@ class CartItem extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 3.sp),
             child: Row(
               children: [
+                /// Cart image
                 Expanded(
                   flex: 4,
                   child: AspectRatio(
@@ -54,17 +58,8 @@ class CartItem extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 3.sp),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(3.sp),
-                        child: FadeInImage(
-                          fadeInCurve: Curves.bounceIn,
-                          placeholder: const AssetImage(
-                              'assets/product-placeholder.png'),
-                          image: NetworkImage(cartItemModel.image),
-                          fit: BoxFit.cover,
-                          imageErrorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                                'assets/product-placeholder.png');
-                          },
-                        ),
+                        child: CachedImage(imageUrl: cartItemModel.image ??
+                            'assets/product-placeholder.png'),
                       ),
                     ),
                   ),
@@ -76,6 +71,7 @@ class CartItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Wrap(children: [
+                        ///  Cart name
                         Text(
                           cartItemModel.name,
                           style: Theme.of(context).textTheme.subtitle1,
@@ -84,6 +80,8 @@ class CartItem extends StatelessWidget {
                         ),
                       ]),
                       SizedBox(height: SizeConfig.getScreenHeight(12.0)),
+
+                      /// Cart Price and OldPrice
                       PriceAndDiscount(
                         price: cartItemModel.price,
                         oldPrice: cartItemModel.oldPrice,
@@ -94,36 +92,19 @@ class CartItem extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
+
+                /// Cart Quantity Increment and Decrement
                 Expanded(
                   flex: 2,
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 14.sp,
-                        backgroundColor: AppColor.kPrimaryColor,
-                        child: IconButton(
-                          iconSize: 14.sp,
-                          onPressed: onPressIncrement,
-                          icon: Icon(Icons.add,
-                              size: 14.sp,
-                              color: Theme.of(context).colorScheme.surface),
-                        ),
-                      ),
+                      CustomCircleButton(
+                          onPressed: onPressIncrement, icon: Icons.add),
                       Text(
                         '${cartItemModel.quantity}',
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
-                      CircleAvatar(
-                        radius: 14.sp,
-                        backgroundColor: AppColor.kPrimaryColor,
-                        child: IconButton(
-                          iconSize: 14.sp,
-                          onPressed: onPressDecrement,
-                          icon: Icon(Icons.remove,
-                              size: 14.sp,
-                              color: Theme.of(context).colorScheme.surface),
-                        ),
-                      ),
+                        style: Theme.of(context).textTheme.subtitle1),
+                      CustomCircleButton(
+                          onPressed: onPressDecrement, icon: Icons.remove),
                     ],
                   ),
                 ),

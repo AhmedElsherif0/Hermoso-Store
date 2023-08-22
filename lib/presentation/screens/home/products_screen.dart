@@ -1,19 +1,29 @@
-import 'package:hermoso_store/cubit/home/products/products_cubit.dart';
-import 'package:hermoso_store/cubit/home/settings/settings_cubit.dart';
-import 'package:hermoso_store/model/home_model/home_data.dart';
-import 'package:hermoso_store/presentation/views/product_grid_item.dart';
-import 'package:hermoso_store/presentation/widgets/custom_widgets/show_snack_bar.dart';
-import 'package:hermoso_store/utils/responsive_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hermoso_store/data/model/products/product_model.dart';
+import 'package:hermoso_store/presentation/views/product_grid_item.dart';
+import 'package:hermoso_store/presentation/widgets/custom_widgets/row_of_icons.dart';
+import 'package:hermoso_store/presentation/widgets/shimmer_loading.dart';
+import 'package:hermoso_store/presentation/widgets/show_snack_bar.dart';
+import 'package:hermoso_store/utils/responsive_size.dart';
+import 'package:sizer/sizer.dart';
 
+import '../../../data/model/home_model/home_data.dart';
+import '../../../data/model/home_model/home_model.dart';
+import '../../../domain/cubit/global_cubit/cart/cart_cubit.dart';
+import '../../../domain/cubit/global_cubit/products/products_cubit.dart';
+import '../../../domain/cubit/global_cubit/settings/settings_cubit.dart';
 import '../../../utils/colors.dart';
 import '../../views/animated_swiper.dart';
+import '../../views/shimmer_list_seperated.dart';
+import '../../widgets/custom_widgets/cached_network_image.dart';
 import '../../widgets/custom_widgets/custom_action_appbar.dart';
 import '../../widgets/custom_widgets/empty_screen.dart';
 import '../../widgets/custom_widgets/loading_widget.dart';
 import '../../widgets/custom_widgets/search_field.dart';
 import '../../widgets/show_dialog.dart';
+import 'cart_screen.dart';
+import 'notification_screen.dart';
 import 'product_details_screen.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -23,15 +33,16 @@ class ProductsScreen extends StatefulWidget {
   State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
-class _ProductsScreenState extends State<ProductsScreen> with ShowSnackBar ,ShowAlertMixin {
+class _ProductsScreenState extends State<ProductsScreen>
+    with SnackBarMixin, AlertDialogMixin {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    if (_dataListItem(context).products.isEmpty) {
-      _productsCubit(context).getProducts();
-    }
     if (_dataListItem(context).banners.isEmpty) {
-      _productsCubit(context).getBanners();
+      await _productsCubit(context).getBanners();
+    }
+    if (_dataListItem(context).products.isEmpty) {
+      await _productsCubit(context).getProducts();
     }
   }
 
@@ -40,199 +51,161 @@ class _ProductsScreenState extends State<ProductsScreen> with ShowSnackBar ,Show
   @override
   void dispose() {
     _searchController.dispose();
-    super.dispose();
+    if (mounted) super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customActionAppBar(
-          isDark: _settingsCubit(context).isDarkMode,
-          color: kWhiteColor,
-          context: context,
-          widget: SearchField(
-              controller: _searchController,
-              onChanged: (value) {
-                _productsCubit(context).searchProductByName(value);
-              }),
+      appBar: CustomAppBar().actionAppBar(
+        isDark: _settingsCubit(context).isDarkMode,
+        color: AppColor.kWhiteColor,
+        barHeight: 6.h,
+        context: context,
+        widget: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SearchField(
+            isDark: _settingsCubit(context).isDarkMode,
+            controller: _searchController,
+            onChanged: (name) => _productsCubit(context).searchProductByName(name),
+          ),
+        ),
+        widget2: BlocBuilder<CartCubit, CartStates>(
+          builder: (context, state) => RowOfIcons(
+            value: _cartCubit(context).cartItemModel.cartMap.length,
+            onPressCart: () => Navigator.pushNamed(context, CartScreen.routeName),
+            onPressFavorite: () =>
+                Navigator.pushNamed(context, NotificationsScreen.routeName),
+          ),
+        ),
       ),
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(child: _buildBannersWidget(context)),
-        SizedBox(height: SizeConfig.getScreenHeight(24)),
-        const Padding(
-          padding: EdgeInsets.only(left: 8.0),
+        SizedBox(height: 1.h),
+        Expanded(child: _buildBannersList(context)),
+        SizedBox(height: 2.5.h),
+        Padding(
+          padding: EdgeInsets.only(left: 2.w),
           child: Text(
             'Recent Item',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(height: SizeConfig.getScreenHeight(8)),
-        Expanded(flex: 4, child: _buildProductsWidget(context)),
+        Expanded(flex: 3, child: _buildProductsWidget(context)),
       ]),
     );
   }
 
   BlocConsumer _buildProductsWidget(context) {
-    return BlocConsumer<ProductsCubit, ProductsState>(
-        listener: (context, state) {
-      if (state is ProductsErrorState) {
-        return showSnackBar(context, 'Please Check Your Network Connection');
-      }
-    }, builder: (context, state) {
-      print('Products builder Widget Screen ');
-      if (state is BannersLoadingState) {
-        print('products Loading states Screen ');
-        return const LoadingWidget();
-      }
-      return _dataListItem(context).products.isNotEmpty
-          ? RefreshIndicator(
-              onRefresh: () => _productsCubit(context).getProducts(),
-              child: GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _searchController.text.isEmpty
-                    ? _dataListItem(context).products.length
-                    : _productsCubit(context).searchedProductList.length,
-                padding: EdgeInsets.all(SizeConfig.getScreenWidth(4)),
-                itemBuilder: (context, index) => ProductGridItem(
-                  onFavorite: () {
-                    _productsCubit(context)
-                      .toggleFavoriteState(_dataListItem(context).products[index].id);
-                  print('${_dataListItem(context).products[index].id}');},
-                  onGestureTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ProductDetails(
-                          id: _searchController.text.isNotEmpty
-                              ? _productsCubit(context)
-                                  .searchedProductList[index]
-                                  .id
-                              : _dataListItem(context).products[index].id,
-                          price: _searchController.text.isNotEmpty
-                              ? _productsCubit(context)
-                                  .searchedProductList[index]
-                                  .price
-                              : _dataListItem(context).products[index].price,
-                          name: _searchController.text.isNotEmpty
-                              ? _productsCubit(context)
-                                  .searchedProductList[index]
-                                  .name
-                              : _dataListItem(context).products[index].name,
-                          networkImage: _searchController.text.isNotEmpty
-                              ? _productsCubit(context)
-                                  .searchedProductList[index]
-                                  .image
-                              : _dataListItem(context).products[index].image,
-                          oldPrice: _searchController.text.isNotEmpty
-                              ? _productsCubit(context)
-                                  .searchedProductList[index]
-                                  .oldPrice
-                              : _dataListItem(context).products[index].oldPrice,
-                          description: _searchController.text.isNotEmpty
-                              ? _productsCubit(context)
-                                  .searchedProductList[index]
-                                  .description
-                              : _dataListItem(context)
-                                  .products[index]
-                                  .description,
-                          onPressFavorite: () => _productsCubit(context)
-                              .toggleFavoriteState(
-                                  _dataListItem(context).products[index].id),
-                        ),
-                      ),
-                    );
+    return BlocConsumer<ProductsCubit, ProductsStates>(
+      listener: (context, state) {
+        if (state is ProductsErrorState) {
+          return showSnackBar(context, 'Please Check Your Network Connection');
+        }
+        if (state is ProductsSuccessChangeFavoriteState) {
+          showSnackBar(context, ' Product Added to Favorite');
+        }
+      },
+      builder: (context, state) {
+        if (state is ProductsInitialState) const LoadingWidget();
+
+        if (state is BannersLoadingState) {
+          return const ShimmerListSeparated(child: ShimmerLoading());
+        }
+        return _dataListItem(context).products.isNotEmpty
+            ? RefreshIndicator(
+                onRefresh: () => _productsCubit(context).getProducts(),
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: _searchController.text.isEmpty
+                      ? _dataListItem(context).products.length
+                      : _productsCubit(context).productSearchList.length,
+                  padding: EdgeInsets.all(SizeConfig.getScreenWidth(4)),
+                  itemBuilder: (context, index) {
+                    final products = _dataListItem(context).products[index];
+                    return ProductGridItem(
+                        cartIcon: products.isInCart
+                            ? Icons.shopping_cart
+                            : Icons.add_shopping_cart,
+                        onPressCart: () => onCartPressed(products, index),
+                        onPressFavorite: () =>
+                            _productsCubit(context).toggleFavoriteState(products.id),
+                        title: _searchController.text.isNotEmpty
+                            ? _productsCubit(context).productSearchList[index].name
+                            : products.name,
+                        price: _searchController.text.isNotEmpty
+                            ? _productsCubit(context).productSearchList[index].price
+                            : products.price,
+                        oldPrice: _searchController.text.isNotEmpty
+                            ? _productsCubit(context).productSearchList[index].oldPrice
+                            : products.oldPrice,
+                        networkImage: _searchController.text.isNotEmpty
+                            ? _productsCubit(context).productSearchList[index].image
+                            : products.image,
+                        favoriteIcon:
+                            _productsCubit(context).favoriteMap[products.id] == true
+                                ? Icons.star
+                                : Icons.star_border,
+                        onGestureTap: () =>
+                            navigateToProductDetailsScreen(context, index));
                   },
-                  title: _searchController.text.isNotEmpty
-                      ? _productsCubit(context).searchedProductList[index].name
-                      : _dataListItem(context).products[index].name,
-                  price: _searchController.text.isNotEmpty
-                      ? _productsCubit(context).searchedProductList[index].price
-                      : _dataListItem(context).products[index].price,
-                  oldPrice: _searchController.text.isNotEmpty
-                      ? _productsCubit(context)
-                          .searchedProductList[index]
-                          .oldPrice
-                      : _dataListItem(context).products[index].oldPrice,
-                  imageUrl: _searchController.text.isNotEmpty
-                      ? _productsCubit(context).searchedProductList[index].image
-                      : _dataListItem(context).products[index].image,
-                  favoriteIcon:  _productsCubit(context).favoriteMap[
-                _dataListItem(context).products[index].id] ==
-                    true
-                    ? Icons.star
-                    : Icons.star_border,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 2 / 2.4,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8),
                 ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 2 / 2.4,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8),
-              ),
-            ) /*ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: _productsListItem(context).length,
-            itemBuilder: (context, index) => ProductCard(
-              onPressedFavorite: () {
-
-              },
-
-              onTapInkWell: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ProductDetails(
-                      id: _productsListItem(context)[index].id,
-                          price: _productsListItem(context)[index].price,
-                          name: _productsListItem(context)[index].name,
-                          networkImage: _productsListItem(context)[index].image,
-                          oldPrice: _productsListItem(context)[index].oldPrice,
-                          description:
-                              _productsListItem(context)[index].description,
-                          onPressFavorite: () => _productsCubit(context)
-                              .toggleFavoriteState(
-                                  _productsListItem(context)[index].id),
-                        )));
-              },
-            ),
-          )*/
-
-          : const EmptyScreen(text: 'Network occur \nan Error');
-    });
+              )
+            : const EmptyScreen(text: 'Network occur \nan Error');
+      },
+    );
   }
 
-  ProductsCubit _productsCubit(context) => ProductsCubit.get(context);
+  ProductsCubit _productsCubit(context) => BlocProvider.of<ProductsCubit>(context);
 
-  SettingsCubit _settingsCubit(context) => SettingsCubit.get(context);
+  CartCubit _cartCubit(context) => BlocProvider.of<CartCubit>(context);
 
-  BlocBuilder _buildBannersWidget(context) {
-    return BlocBuilder<ProductsCubit, ProductsState>(
+  HomeData _dataListItem(context) => _productsCubit(context).homeModel.data;
+
+  _settingsCubit(context) => BlocProvider.of<SettingsCubit>(context);
+
+  Widget _buildBannersList(BuildContext context) {
+    return BlocBuilder<ProductsCubit, ProductsStates>(
       builder: (context, state) {
-        print('banners builder Widget Screen ');
-        if (state is BannersLoadingState) {
-          print('banners loading states Screen ');
-          return const LoadingWidget();
-        }
-        if (state is BannersErrorState) {
-          print('banners error states Screen :${state.error.toString()}');
-        }
+        if (state is ProductsInitialState) const LoadingWidget();
+
+        if (state is BannersLoadingState) const ShimmerLoading();
+
+        if (state is BannersErrorState) {}
         return _dataListItem(context).banners.isNotEmpty
             ? AnimationSwiper(
-                itemBuilder: (context, index) {
-                  return FadeInImage(
-                      placeholder:
-                          const AssetImage('assets/product-placeholder.png'),
-                      image: NetworkImage(
-                          '${_dataListItem(context).banners[index].image}'),
-                      fit: BoxFit.cover);
-                },
                 itemLength: _dataListItem(context).banners.length,
+                itemBuilder: (context, index) => CachedImage(
+                    imageUrl: '${_dataListItem(context).banners[index].image}'),
               )
             : const EmptyScreen(text: 'Network occur an Error...');
       },
     );
   }
 
-  HomeData _dataListItem(context) {
-    return _productsCubit(context).homeModel.data;
+  /// add working great
+  void onCartPressed(ProductModel products, index) async {
+    await _productsCubit(context).toggleCartIcon(products);
+    _productsCubit(context).toggleProductCartIcon(index);
+    showSnackBar(context, ' Product ${products.id} Added to cart');
+    print(_dataListItem(context).products[index].isInCart);
+    print('cartMap.length ${_cartCubit(context).cartItemModel.cartMap.length}');
+  }
+
+  void navigateToProductDetailsScreen(context, int index) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BlocProvider.value(
+          value: _productsCubit(context),
+          child: ProductDetails(
+              index: index, emptySearchList: _searchController.text.isNotEmpty),
+        ),
+      ),
+    );
   }
 }

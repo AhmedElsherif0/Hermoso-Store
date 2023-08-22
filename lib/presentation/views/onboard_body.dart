@@ -1,8 +1,9 @@
-import 'package:hermoso_store/utils/style.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class OnBoardBody extends StatelessWidget {
-  const OnBoardBody({Key? key, required this.text, required this.image}) : super (key: key);
+  const OnBoardBody({Key? key, required this.text, required this.image})
+      : super(key: key);
 
   final String text;
   final String image;
@@ -12,20 +13,24 @@ class OnBoardBody extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-      const  Spacer(),
-        Container(
-            margin: const EdgeInsets.all(8),
-            child: const Text('Hermoso',
-                style: kHermosoLogo, textAlign: TextAlign.center),),
-        Text(
-          text,
-          style: Theme.of(context).textTheme.subtitle2,
-          textAlign: TextAlign.center,
+        const Spacer(),
+        Expanded(
+          child: Text('Hermoso',
+              style: Theme.of(context).textTheme.headline1,
+              textAlign: TextAlign.center),
         ),
-       const Spacer(),
-        Expanded(flex:4,
+        Expanded(
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.subtitle2,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const Spacer(),
+        Expanded(
+            flex: 5,
             child: Image.asset(image,
-                fit: BoxFit.contain, width: 250, height: 250)),
+                fit: BoxFit.contain, width: 180.sp, height: 180.sp, )),
       ],
     );
   }

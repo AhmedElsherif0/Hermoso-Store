@@ -18,7 +18,7 @@ class _AnimationSwiperState extends State<AnimationSwiper> {
   @override
   Widget build(BuildContext context) {
     return Swiper(
-      itemHeight: SizeConfig.getScreenHeight(200),
+      itemHeight: SizeConfig.getScreenHeight(240),
       itemCount: widget.itemLength,
       itemBuilder: widget.itemBuilder,
       autoplay: true,

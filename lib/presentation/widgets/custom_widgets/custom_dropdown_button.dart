@@ -1,33 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hermoso_store/utils/colors.dart';
 
-class CustomDropDownButton extends StatefulWidget {
-  const CustomDropDownButton({Key? key}) : super(key: key);
+import '../../../domain/cubit/global_cubit/settings/settings_cubit.dart';
 
-  @override
-  _CustomDropDownButtonState createState() => _CustomDropDownButtonState();
-}
-
-class _CustomDropDownButtonState extends State<CustomDropDownButton> {
-  String dropDownValue = 'English';
+class CustomDropDownButton extends StatelessWidget {
+  const CustomDropDownButton({
+    Key? key,
+    required this.settingsCubit,
+  }) : super(key: key);
+  final SettingsCubit settingsCubit;
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: dropDownValue,
-        underline: const SizedBox() ,
-      icon: const Icon(Icons.arrow_forward_ios),
-      onChanged: (String? newValue) {
-        setState(() {
-          dropDownValue = newValue!;
-        });
-      },
-      items: <String>['English', 'Arabic']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
+    return BlocBuilder<SettingsCubit, SettingsStates>(builder: (context, state) {
+      print('settings screen language');
+      return ListTile(
+        leading: Icon(Icons.language,
+            color: settingsCubit.isDarkMode
+                ? AppColor.kPrimaryColor
+                : AppColor.kGreyColor),
+        title: const Text('Language'),
+        trailing: DropdownButton<String>(
+          value: settingsCubit.dropDownValue,
+          underline: const SizedBox(),
+          icon: const Icon(Icons.arrow_forward_ios),
+          onChanged: (String? newValue) => settingsCubit.changeLanguage(newValue),
+          items: <String>['English', 'Arabic']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(value: value, child: Text(value));
+          }).toList(),
+        ),
+      );
+    });
   }
 }

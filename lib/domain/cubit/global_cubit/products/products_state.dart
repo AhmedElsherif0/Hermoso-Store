@@ -38,6 +38,12 @@ class ProductsErrorState extends ProductsStates {
 
 class ProductsSuccessChangeFavoriteState extends ProductsStates {}
 class ProductsCartBadgeState extends ProductsStates {}
+class ProductAddedToCartScreenState extends ProductsStates {}
+class ProductRemovedFromCartScreenState extends ProductsStates {
+  final String? error;
+
+  ProductRemovedFromCartScreenState(this.error);
+}
 
 class ProductsSuccessChangeCartState extends ProductsStates {}
 class ProductsRemoveAllCartState extends ProductsStates {}

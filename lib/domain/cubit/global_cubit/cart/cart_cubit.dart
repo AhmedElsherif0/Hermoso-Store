@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hermoso_store/domain/cubit/global_cubit/products/products_cubit.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../data/model/cart_model/cart_item_model.dart';
@@ -10,79 +11,44 @@ import '../../../repository/cart_repository.dart';
 part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartStates> {
-  final CartRepository _cartRepository = MockCartRepo();
-
   CartCubit() : super(CartInitialState());
 
+  final CartRepository _cartRepository = MockCartRepo();
   CartItemModel cartItemModel = CartItemModel.custom();
-  Map<int, CartItemModel> _cartMap = {};
-
-  Map<int, CartItemModel> get cartMap => _cartMap;
-
-  set cartMap(Map<int, CartItemModel> value) {
-    _cartMap = value;
-  }
 
 
-  String cartTable = 'cartTable';
-
-  Future<void> toggleCartIcon(ProductModel productModel, index) async {
-    print("remove by product id ${productModel.id}");
-    try {
-      emit(CartLoadingState());
-      if (_cartMap.containsKey(productModel.id)) {
-        await removeItem(productModel.id, _cartMap.keys.toList()[index]);
-      } else {
-        await addToCart(productModel: productModel);
-      }
-      emit(CartSuccessState());
-    } catch (error) {
-      emit(CartErrorState(error.toString()));
-    }
-  }
 
   Future<Map<int, CartItemModel>> readCart() async {
     try {
       emit(CartLoadingState());
-      cartMap = await _cartRepository.readDataBaseRepo();
+      cartItemModel.cartMap = await _cartRepository.readDataBaseRepo();
       emit(CartReadDataBaseState());
     } catch (error) {
       emit(CartErrorState(error.toString()));
     }
-    return cartMap;
+    return cartItemModel.cartMap;
   }
 
-  Future<Map<int, CartItemModel>> updateQuantity(
-      int index, int cartId, bool isUpdated) async {
+  Future<Map<int, CartItemModel>> updateQuantity(int cartId, bool isUpdated) async {
     try {
-      _cartMap = await _cartRepository.updateCartRepo(
-          cartId: cartId, isUpdated: isUpdated, index: index);
+      cartItemModel.cartMap =
+          await _cartRepository.updateCartRepo(cartId: cartId, isUpdated: isUpdated);
       emit(CartItemUpdateState());
     } catch (error) {
       emit(CartErrorState(error.toString()));
       print(error.toString());
     }
-    return _cartMap;
-  }
-
-  Future<void> addToCart({required ProductModel productModel}) async {
-    emit(CartLoadingState());
-    try {
-      _cartMap = await _cartRepository.addToCart(productModel: productModel);
-      emit(CartItemAddedToCartScreenState());
-    } catch (error) {
-      emit(CartErrorState(error.toString()));
-    }
+    return cartItemModel.cartMap;
   }
 
   Future<void> clearCartMap() async {
-    _cartMap = await _cartRepository.clearCartMapRepo();
+    cartItemModel.cartMap = await _cartRepository.clearCartMapRepo();
     emit(CartItemClearState());
   }
 
-  Future<void> removeItem(int cartId, int index) async {
+  Future<void> removeCartItem(int cartId) async {
     try {
-      _cartMap = await _cartRepository.removeItemRepo(cartId, index);
+      cartItemModel.cartMap = await _cartRepository.removeItemRepo(cartId);
       emit(CartItemRemoveState());
     } catch (error) {
       emit(CartErrorState(error.toString()));
@@ -91,7 +57,7 @@ class CartCubit extends Cubit<CartStates> {
 
   double totalAmountBeforeTaxes() {
     cartItemModel.total = 0.0;
-    _cartMap.forEach((key, value) {
+    cartItemModel.cartMap.forEach((key, value) {
       cartItemModel.total += value.price * value.quantity;
     });
     return cartItemModel.total;

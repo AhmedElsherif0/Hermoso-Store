@@ -1,7 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:hermoso_store/model/products/product_model.dart';
-import 'package:hermoso_store/presentation/screens/home/product_details_screen.dart';
-
 import '../presentation/screens/auth_Screens/forget_password.dart';
 import '../presentation/screens/auth_Screens/login_screen.dart';
 import '../presentation/screens/auth_Screens/register_screen.dart';
@@ -12,7 +9,6 @@ import '../presentation/screens/onboard_screen.dart';
 
 
 class Routes {
-  final productModel  = const RouteSettings().arguments as ProductModel;
 
   static Map<String, Widget Function(BuildContext)> route = {
     OnBoardScreen.routeName: (ctx) => const OnBoardScreen(),

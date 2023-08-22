@@ -1,7 +1,11 @@
 import 'dart:io';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hermoso_store/domain/cubit/global_cubit/cart/cart_cubit.dart';
+import 'package:hermoso_store/domain/repository/cart_repository.dart';
 import 'package:meta/meta.dart';
+
+import '../../../../data/model/cart_model/cart_item_model.dart';
 import '../../../../data/model/favorite_model/favorite_data.dart';
 import '../../../../data/model/favorite_model/favorite_datum.dart';
 import '../../../../data/model/favorite_model/favorite_model.dart';
@@ -9,17 +13,15 @@ import '../../../../data/model/home_model/home_model.dart';
 import '../../../../data/model/products/product_model.dart';
 import '../../../repository/favorite_repository.dart';
 import '../../../repository/products_repository.dart';
-import '../cart/cart_cubit.dart';
 
 part 'products_state.dart';
 
 class ProductsCubit extends Cubit<ProductsStates> {
-  final ProductsRepository _productsRepository = MockProductsRepo();
-  final FavoriteRepository _favoriteRepository = MockFavoriteRepo();
 
   ProductsCubit() : super(ProductsInitialState());
 
-  final CartCubit _cartCubit = CartCubit();
+  final ProductsRepository _productsRepository = MockProductsRepo();
+  final FavoriteRepository _favoriteRepository = MockFavoriteRepo();
 
   HomeModel homeModel = HomeModel();
   FavoriteData favoriteData = FavoriteData();
@@ -31,11 +33,24 @@ class ProductsCubit extends Cubit<ProductsStates> {
   List<FavoriteList> favoriteSearchList = [];
 
 //****
-
-  int cartMapLength (){
-    int length = _cartCubit.cartMap.length;
-    print('cubit the length is : $length ');
-    return length ;
+  Future<void> toggleCartIcon(ProductModel productModel) async {
+    final CartCubit cartCubit = CartCubit();
+    print("prossecc by product id ${productModel.id}");
+    try {
+      if (cartCubit.cartItemModel.cartMap.containsKey(productModel.id)) {
+        await CartCubit().removeCartItem(productModel.id);
+        print('cart cubit remove by id toggle item');
+      } else {
+        cartCubit.cartItemModel.cartMap =
+            await _productsRepository.addToCartRepo(productModel: productModel);
+        print(
+            'cart cubit add toggle ${cartCubit.cartItemModel.cartMap.values.length}');
+      }
+      emit(ProductCartAddedToCartScreenState());
+    } catch (error) {
+      emit(ProductRemovedFromCartScreenState(error.toString()));
+      print('cart cubit toggle ${error.toString()} item');
+    }
   }
 
   Future<List<void>> getAllRemoteData() async =>
@@ -94,14 +109,14 @@ class ProductsCubit extends Cubit<ProductsStates> {
   }
 
   bool toggleProductCartIcon(int index) {
-    homeModel.data.products[index].inCart =
-        homeModel.data.products[index].inCart == false;
+    homeModel.data.products[index].isInCart =
+        homeModel.data.products[index].isInCart == false;
     emit(ProductsSuccessChangeCartState());
-    return homeModel.data.products[index].inCart;
+    return homeModel.data.products[index].isInCart;
   }
 
   void removeAllInCart() {
-    homeModel.data.products.any((element) => element.inCart = false);
+    homeModel.data.products.any((element) => element.isInCart = false);
     emit(ProductsRemoveAllCartState());
   }
 
@@ -109,11 +124,8 @@ class ProductsCubit extends Cubit<ProductsStates> {
   Future<void> getFavorites() async {
     emit(FavoriteLoadingState());
     try {
-      favoriteData.favoriteList =
-      await _favoriteRepository.getFavoriteResponse();
-      print(
-          'get Favorite cubit success is : ${favoriteData.favoriteList
-              .length}');
+      favoriteData.favoriteList = await _favoriteRepository.getFavoriteResponse();
+      print('get Favorite cubit success is : ${favoriteData.favoriteList.length}');
       emit(FavoriteSuccessState(favoriteData.favoriteList));
     } on SocketException catch (error) {
       emit(FavoriteNetworkErrorState(error.toString()));
@@ -134,8 +146,8 @@ class ProductsCubit extends Cubit<ProductsStates> {
 
   void searchFavoriteByName(String name) {
     favoriteSearchList = favoriteData.favoriteList
-        .where((element) =>
-        element.favoriteProduct.name.toLowerCase().startsWith(name))
+        .where(
+            (element) => element.favoriteProduct.name.toLowerCase().startsWith(name))
         .toList();
     emit(FavoritesSuccessSearchState());
   }
@@ -166,6 +178,6 @@ class ProductsCubit extends Cubit<ProductsStates> {
     emit(FavoriteAddItemState());
   }
 
-  int findById(int cartId) =>
+  int findCartById(int cartId) =>
       homeModel.data.products.indexWhere((element) => element.id == cartId);
 }
