@@ -24,10 +24,10 @@ ThemeData lightThemeMode() {
         headline4: GoogleFonts.lato(
             color: Colors.black, fontSize: 22.sp, fontWeight: FontWeight.bold),
         button: TextStyle(
-            color: AppColor. kCoWhiteColor, fontSize: 16.sp, fontWeight: FontWeight.w600),
+            color: AppColor. kCoWhiteColor, fontSize: 16.sp,
+            fontWeight: FontWeight.w600),
         bodyText1: TextStyle(
-            fontSize: 11.1.sp,
-            color: Colors.black,
+            fontSize: 11.1.sp, color: Colors.black,
             fontWeight: FontWeight.bold),
         bodyText2: TextStyle(fontSize: 11.sp, color: Colors.black),
         caption: const TextStyle(fontSize: 18, color: AppColor.kGreyColor),
@@ -36,6 +36,7 @@ ThemeData lightThemeMode() {
     ),
     colorScheme: const ColorScheme.light(
         primary: AppColor.kPrimaryColor,
+
         secondaryContainer: AppColor. kSecondaryContainerColor,
         primaryContainer: AppColor.kWhiteColor,
         // secondaryVariant: ,

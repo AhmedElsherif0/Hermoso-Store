@@ -41,11 +41,11 @@ dependencies:
   shared_preferences: 2.0.15
   card_swiper: ^2.0.4
   path_provider: 2.0.11
-  sqflite: ^2.0.2
+  sqlite: ^2.0.2
   font_awesome_flutter: ^10.1.0
   sizer: ^2.0.15
-
-
+  shimmer: ^2.0.0
+  cached_network_image: ^3.2.0
 
 dev_dependencies:
   flutter_test:
