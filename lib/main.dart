@@ -29,13 +29,25 @@ void main() async {
   runApp(MyApp(isDark: isDarkTheme, widget: widget));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final Widget widget;
   final bool isDark;
 
-  const MyApp(
-      {Key? key, this.widget = const OnBoardScreen(), this.isDark = false})
+  const MyApp({Key? key, this.widget = const OnBoardScreen(), this.isDark = false})
       : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _productsCubit = ProductsCubit();
+
+  @override
+  void dispose() {
+    _productsCubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +60,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (context) => SettingsCubit()
               ..getUserProfile()
-              ..switchThemeMode(themeMode: isDark)),
-        BlocProvider(create: (context) => ProductsCubit()..getAllRemoteData()),
+              ..switchThemeMode(themeMode: widget.isDark)),
+        BlocProvider(create: (context) => _productsCubit..getAllRemoteData()),
       ],
       child: BlocBuilder<SettingsCubit, SettingsStates>(
         builder: (context, state) {
@@ -64,8 +76,8 @@ class MyApp extends StatelessWidget {
                 themeMode: BlocProvider.of<SettingsCubit>(context).isDarkMode
                     ? ThemeMode.dark
                     : ThemeMode.light,
-                home: widget,
-                routes: Routes.route,
+                home: widget.widget,
+                routes: Routes.route(_productsCubit),
               );
             },
           );

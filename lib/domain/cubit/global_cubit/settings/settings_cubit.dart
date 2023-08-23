@@ -23,14 +23,9 @@ class SettingsCubit extends Cubit<SettingsStates> {
   String dropDownValue = 'English';
 
   void switchThemeMode({bool? themeMode}) {
-    if (themeMode != null) {
-      isDarkMode = themeMode;
-      emit(SettingsChangeThemeModeState());
-    } else {
-      isDarkMode = !isDarkMode;
-      SharedPref.saveData(key: 'dark', value: isDarkMode);
-      emit(SettingsChangeThemeModeState());
-    }
+    themeMode != null? isDarkMode = themeMode : isDarkMode = !isDarkMode;
+    SharedPref.saveData(key: 'dark', value: isDarkMode);
+    emit(SettingsChangeThemeModeState());
   }
 
   void changeLanguage(String? value) async{

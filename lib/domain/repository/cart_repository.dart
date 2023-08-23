@@ -8,7 +8,9 @@ abstract class CartRepository {
 
   Future<Map<int, CartItemModel>> clearCartMapRepo();
 
-  Future<Map<int, CartItemModel>> removeItemRepo(int cartId);
+  Future<Map<int, CartItemModel>> addToCartRepo({required ProductModel productModel});
+
+  Future<void> removeItemRepo(int cartId);
 
   Future<Map<int, CartItemModel>> readDataBaseRepo();
 }
@@ -23,7 +25,7 @@ class MockCartRepo extends CartRepository {
     cartItemModel.cartMap = Map.from(await readDataBaseRepo());
     _updateModel(cartId, isUpdated);
     if (cartItemModel.quantity > 0) {
-       final updated = await _sqliteDatabase.update(
+      final updated = await _sqliteDatabase.update(
           product: cartItemModel, tableName: _sqliteDatabase.cartTableName);
       print('item updated $updated and itemId : ${cartItemModel.quantity}');
     }
@@ -47,6 +49,7 @@ class MockCartRepo extends CartRepository {
 
   @override
   Future<Map<int, CartItemModel>> readDataBaseRepo() async {
+    cartItemModel.cartMap = Map.from(cartItemModel.cartMap);
     final result =
         await _sqliteDatabase.readByTable(table: _sqliteDatabase.cartTableName);
     cartItemModel.cartMap =
@@ -56,22 +59,42 @@ class MockCartRepo extends CartRepository {
   }
 
   @override
-  Future<Map<int, CartItemModel>> clearCartMapRepo() async {
-    print('Cart items cleared');
-    cartItemModel.cartMap.clear();
-    await _sqliteDatabase.deleteAllItems(tableName: _sqliteDatabase.cartTableName);
+  Future<Map<int, CartItemModel>> addToCartRepo(
+      {required ProductModel productModel}) async {
+    cartItemModel.cartMap = Map.from(cartItemModel.cartMap);
+    CartItemModel cartModel = cartItemModel.cartMap.putIfAbsent(
+        productModel.id,
+        () => CartItemModel(
+            id: productModel.id,
+            name: productModel.name,
+            price: productModel.price,
+            oldPrice: productModel.oldPrice,
+            image: productModel.image,
+            quantity: 1));
+    if (!cartItemModel.cartMap.containsValue(productModel.id)) {
+      print('Cart Cubit cartMap added ${cartItemModel.cartMap} ');
+      await _sqliteDatabase.insertProduct(
+          product: cartModel, tableName: _sqliteDatabase.cartTableName);
+    }
     return cartItemModel.cartMap;
   }
 
   @override
-  Future<Map<int, CartItemModel>> removeItemRepo(int cartId) async {
+  Future<void> removeItemRepo(int cartId) async {
     cartItemModel.cartMap = Map.from(cartItemModel.cartMap);
-    print('Cart remove one item');
-    if (cartItemModel.cartMap.containsKey(cartId)) {
-      cartItemModel.cartMap.removeWhere((item, product) => item == product.id);
-      await _sqliteDatabase.deleteItem(
-          id: cartId, tableName: _sqliteDatabase.cartTableName);
-    }
+    print('Cart Repository remove one item $cartId');
+    cartItemModel.cartMap.removeWhere((item, product) => product.id == cartId);
+    await _sqliteDatabase.deleteItem(
+        id: cartId, tableName: _sqliteDatabase.cartTableName);
+    print('Cart Repository removed item $cartId');
+  }
+
+  @override
+  Future<Map<int, CartItemModel>> clearCartMapRepo() async {
+    cartItemModel.cartMap = Map.from(cartItemModel.cartMap);
+    print('Cart items cleared');
+    cartItemModel.cartMap = {};
+    await _sqliteDatabase.deleteAllItems(tableName: _sqliteDatabase.cartTableName);
     return cartItemModel.cartMap;
   }
 }

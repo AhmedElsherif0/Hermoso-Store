@@ -13,7 +13,6 @@ class CustomDropDownButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, SettingsStates>(builder: (context, state) {
       print('settings screen language');
       return ListTile(
         leading: Icon(Icons.language,
@@ -32,6 +31,5 @@ class CustomDropDownButton extends StatelessWidget {
           }).toList(),
         ),
       );
-    });
   }
 }

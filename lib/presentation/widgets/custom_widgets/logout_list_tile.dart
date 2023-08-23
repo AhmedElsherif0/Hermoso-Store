@@ -8,7 +8,7 @@ import '../../../utils/colors.dart';
 import '../../screens/auth_Screens/login_screen.dart';
 import 'loading_widget.dart';
 
-class CustomListTile extends StatelessWidget with SnackBarMixin, AlertDialogMixin {
+class CustomListTile extends StatelessWidget {
   const CustomListTile({
     Key? key,
     required this.onTap,
@@ -26,29 +26,17 @@ class CustomListTile extends StatelessWidget with SnackBarMixin, AlertDialogMixi
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SettingsCubit, SettingsStates>(
-        listener: (context, state) async {
-      if (state is SettingsSuccessState) {
-        if (state.authModel.status == true) {
-          print('the settings screen : ${state.authModel.message}');
-          showSnackBar(context, state.authModel.message.toString());
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              LoginScreen.routeName, (Route<dynamic> route) => false);
-        }
-      }
-      if (state is SettingsErrorState) {
-        showAlertDialog(context, state.error.toString(), 'Please try again');
-      }
-    }, builder: (context, state) {
-      if (state is SettingsLoadingState) const LoadingWidget();
-      return InkWell(
-        onTap: onTap,
-        child: ListTile(
-            leading: Icon(icon,
-                color: isDarkMode ? AppColor.kPrimaryColor : AppColor.kGreyColor),
-            title: Text(title),
-            trailing: trailingWidget),
-      );
-    });
+    return BlocBuilder<SettingsCubit, SettingsStates>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: onTap,
+          child: ListTile(
+              leading: Icon(icon,
+                  color: isDarkMode ? AppColor.kPrimaryColor : AppColor.kGreyColor),
+              title: Text(title),
+              trailing: trailingWidget),
+        );
+      },
+    );
   }
 }
