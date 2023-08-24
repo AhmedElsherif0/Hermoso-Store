@@ -50,6 +50,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
             Text('Favorite', style: Theme.of(context).textTheme.headline4),
             SizedBox(height: SizeConfig.getScreenHeight(14)),
             SearchField(
+               isDark: _settingsCubit(context).isDarkMode,
               controller: _searchController,
               onChanged: (name) =>
                   _productCubit(context).searchFavoriteByName(name),

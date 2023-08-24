@@ -6,12 +6,13 @@ class CachedImage extends StatelessWidget {
   const CachedImage({
     Key? key,
     required this.imageUrl,
-    this.curves = Curves.bounceIn,
+    this.curves = Curves.bounceIn, this.boxFit = BoxFit.cover,
   }) : super(key: key);
 
   final String imageUrl;
 
   final Curve curves;
+  final BoxFit boxFit;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class CachedImage extends StatelessWidget {
       fadeInCurve: curves,
       placeholder: (context, url) => const Center(child:  CircularProgressIndicator.adaptive()),
       imageUrl: imageUrl,
-      fit: BoxFit.cover,
+      fit: boxFit,
       errorWidget: (context, error, stackTrace) {
         return Image.asset('assets/product-placeholder.png');
       },
