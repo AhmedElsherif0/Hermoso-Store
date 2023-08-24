@@ -16,7 +16,25 @@ class CartCubit extends Cubit<CartStates> {
   final CartRepository _cartRepository = MockCartRepo();
   CartItemModel cartItemModel = CartItemModel.custom();
 
-
+  Future<void> toggleCartIcon(ProductModel productModel) async {
+    final isExist = cartItemModel.cartMap.entries.any((element) =>
+    element.value.id == productModel.id);
+    try {
+      if (isExist) {
+        await removeCartItem(productModel.id);
+        print('cart cubit remove by id toggle item');
+      } else {
+        cartItemModel.cartMap =
+        await _cartRepository.addToCartRepo(productModel: productModel);
+        print('cart cubit add toggle ${cartItemModel.cartMap.values.length}');
+      }
+      cartItemModel.cartMap = await readCart();
+      emit(CartItemAddedToCartScreenState());
+    } catch (error) {
+      emit(CartErrorState(error.toString()));
+      print('cart cubit error ${error.toString()} item');
+    }
+  }
 
   Future<Map<int, CartItemModel>> readCart() async {
     try {
@@ -25,6 +43,7 @@ class CartCubit extends Cubit<CartStates> {
       emit(CartReadDataBaseState());
     } catch (error) {
       emit(CartErrorState(error.toString()));
+      print('cart cubit read error ${error.toString()} item');
     }
     return cartItemModel.cartMap;
   }
@@ -32,7 +51,7 @@ class CartCubit extends Cubit<CartStates> {
   Future<Map<int, CartItemModel>> updateQuantity(int cartId, bool isUpdated) async {
     try {
       cartItemModel.cartMap =
-          await _cartRepository.updateCartRepo(cartId: cartId, isUpdated: isUpdated);
+      await _cartRepository.updateCartRepo(cartId: cartId, isUpdated: isUpdated);
       emit(CartItemUpdateState());
     } catch (error) {
       emit(CartErrorState(error.toString()));
@@ -48,10 +67,11 @@ class CartCubit extends Cubit<CartStates> {
 
   Future<void> removeCartItem(int cartId) async {
     try {
-      cartItemModel.cartMap = await _cartRepository.removeItemRepo(cartId);
+      await _cartRepository.removeItemRepo(cartId);
       emit(CartItemRemoveState());
     } catch (error) {
       emit(CartErrorState(error.toString()));
+      print('cart cubit removeCartItem ${error.toString()} item');
     }
   }
 

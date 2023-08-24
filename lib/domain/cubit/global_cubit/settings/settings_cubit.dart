@@ -50,7 +50,7 @@ class SettingsCubit extends Cubit<SettingsStates> {
 
   void getUserProfile() async {
     emit(SettingsGetProfileLoadingState());
-    if (token != null) {
+    if (AppStrings.token != null) {
       try {
         authModel = await _settingsRepository.getProfile();
         print('getUserProfile cubit settings status ${authModel.status}');

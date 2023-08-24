@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-
 import 'package:hermoso_store/utils/constants.dart';
 
 import '../../data/database/api_service/dio_service.dart';
@@ -19,22 +18,23 @@ class MockSettingsRepo implements SettingsRepository {
 
   @override
   Future<String?> loginOut() async {
-    token = SharedPref.getData(key: 'token');
+    AppStrings.token = SharedPref.getData(key: 'token');
     Response? _response = await DioService.postResponse(
-        url: 'logout', authorizationToken: token, lang: en);
+        url: AppStrings.logout,
+        authorizationToken: AppStrings.token,
+        lang: AppStrings.en);
     _authModel = AuthModel.fromJsonLogout(_response?.data);
-    print(
-        ' loginOut repository error : ${_authModel.data.token.toString()}');
+    print(' loginOut repository error : ${_authModel.data.token.toString()}');
     await SharedPref.removeData(key: 'token');
-    token =null;
+    AppStrings.token = null;
     return _authModel.message;
   }
 
   @override
   Future<AuthModel> getProfile() async {
-    token = SharedPref.getData(key: 'token');
+    AppStrings.token = SharedPref.getData(key: 'token');
     Response? _response = await DioService.getResponse(
-        url: 'profile', authorizationToken: token, lang: en);
+        url: 'profile', authorizationToken: AppStrings.token, lang: AppStrings.en);
     if (_response?.data != null) {
       _authModel = AuthModel.fromJson(_response?.data);
       print(
@@ -44,14 +44,13 @@ class MockSettingsRepo implements SettingsRepository {
   }
 
   @override
-  Future<AuthModel> updateProfile(
-      String name, String email, String phone) async {
-    token = SharedPref.getData(key: 'token');
+  Future<AuthModel> updateProfile(String name, String email, String phone) async {
+    AppStrings.token = SharedPref.getData(key: 'token');
     Response? _response = await DioService.putResponse(
         url: 'update-profile',
-        lang: en,
+        lang: AppStrings.en,
         data: {'name': name, 'email': email, 'phone': phone},
-        authorizationToken: token);
+        authorizationToken: AppStrings.token);
     if (_response?.data != null) {
       _authModel = AuthModel.fromJson(_response?.data);
       if (_authModel.status = true) {

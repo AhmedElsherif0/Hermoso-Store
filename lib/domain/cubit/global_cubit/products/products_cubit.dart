@@ -17,11 +17,12 @@ import '../../../repository/products_repository.dart';
 part 'products_state.dart';
 
 class ProductsCubit extends Cubit<ProductsStates> {
-
   ProductsCubit() : super(ProductsInitialState());
 
   final ProductsRepository _productsRepository = MockProductsRepo();
   final FavoriteRepository _favoriteRepository = MockFavoriteRepo();
+  final CartRepository _cartRepository = MockCartRepo();
+  CartItemModel cartItemModel = CartItemModel.custom();
 
   HomeModel homeModel = HomeModel();
   FavoriteData favoriteData = FavoriteData();
@@ -33,28 +34,36 @@ class ProductsCubit extends Cubit<ProductsStates> {
   List<FavoriteList> favoriteSearchList = [];
 
 //****
+
+  bool _isCartExistByID(ProductModel productModel) =>
+      cartItemModel.cartMap.values.any((element) => element.id == productModel.id);
+
   Future<void> toggleCartIcon(ProductModel productModel) async {
-    final CartCubit cartCubit = CartCubit();
-    print("prossecc by product id ${productModel.id}");
+    CartCubit cartCubit = CartCubit();
+    if (_isCartExistByID(productModel)) {
+      await cartCubit.removeCartItem(productModel.id);
+      print('cart cubit remove by id toggle item');
+    } else {
+      await addToCart(productModel: productModel);
+      print('cart cubit add toggle ${cartItemModel.cartMap.values.length}');
+    }
+    cartItemModel.cartMap = await cartCubit.readCart();
+  }
+
+  Future<void> addToCart({required ProductModel productModel}) async {
+    emit(ProductCartLoadingState());
     try {
-      if (cartCubit.cartItemModel.cartMap.containsKey(productModel.id)) {
-        await CartCubit().removeCartItem(productModel.id);
-        print('cart cubit remove by id toggle item');
-      } else {
-        cartCubit.cartItemModel.cartMap =
-            await _productsRepository.addToCartRepo(productModel: productModel);
-        print(
-            'cart cubit add toggle ${cartCubit.cartItemModel.cartMap.values.length}');
-      }
-      emit(ProductCartAddedToCartScreenState());
+      cartItemModel.cartMap =
+          await _cartRepository.addToCartRepo(productModel: productModel);
+      emit(ProductAddedToCartScreenState(cartItemModel.cartMap));
     } catch (error) {
-      emit(ProductRemovedFromCartScreenState(error.toString()));
-      print('cart cubit toggle ${error.toString()} item');
+      emit(ProductsErrorState(error.toString()));
+      print('cart cubit error ${error.toString()} item');
     }
   }
 
   Future<List<void>> getAllRemoteData() async =>
-      await Future.wait([getBanners(), getProducts(), getFavorites()]);
+      await Future.wait([getBanners(), getProducts()]);
 
   Future<void> getBanners() async {
     emit(BannersLoadingState());
@@ -109,15 +118,14 @@ class ProductsCubit extends Cubit<ProductsStates> {
   }
 
   bool toggleProductCartIcon(int index) {
-    homeModel.data.products[index].isInCart =
-        homeModel.data.products[index].isInCart == false;
+    homeModel.data.products[index].isInCart = !homeModel.data.products[index].isInCart;
     emit(ProductsSuccessChangeCartState());
     return homeModel.data.products[index].isInCart;
   }
 
   void removeAllInCart() {
     homeModel.data.products.any((element) => element.isInCart = false);
-    emit(ProductsRemoveAllCartState());
+    emit(ProductsClearAllCartState());
   }
 
   /// related by favoriteItems Cubit
