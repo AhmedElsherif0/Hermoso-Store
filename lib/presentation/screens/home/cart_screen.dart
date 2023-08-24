@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hermoso_store/data/database/local_data/sqlite_database.dart';
-import 'package:hermoso_store/data/model/cart_model/cart_item_model.dart';
 import 'package:hermoso_store/presentation/widgets/custom_widgets/back_ios_button.dart';
 import 'package:hermoso_store/presentation/widgets/custom_widgets/custom_action_appbar.dart';
 import 'package:hermoso_store/presentation/widgets/custom_widgets/custom_elevated_button.dart';
@@ -33,17 +31,9 @@ class _CartScreenState extends State<CartScreen> {
   SettingsCubit _settingsCubit(context) => BlocProvider.of<SettingsCubit>(context);
 
   void _onDismissed(context, cartId, index) async {
-    int keyIndex = _cartCubit(context)
-        .cartItemModel
-        .cartMap
-        .keys
-        .elementAt(_cartCubit(context).cartItemModel.cartMap.values.toList()[index].id);
-    int valueId = _cartCubit(context)
-        .cartItemModel
-        .cartMap
-        .values
-        .toList()[index]
-        .id;
+    int keyIndex = _cartCubit(context).cartItemModel.cartMap.keys.elementAt(
+        _cartCubit(context).cartItemModel.cartMap.values.toList()[index].id);
+    int valueId = _cartCubit(context).cartItemModel.cartMap.values.toList()[index].id;
     _productCubit(context)
         .toggleProductCartIcon(_productCubit(context).findCartById(cartId));
     _cartCubit(context).removeCartItem(cartId);
@@ -61,19 +51,8 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             const Spacer(),
             Expanded(
-              flex: 3,
-              child: Row(
-                children: [
-                  BackIosButton(
-                      backgroundColor: _settingsCubit(context).isDarkMode
-                          ? AppColor.kBackButtonColor
-                          : AppColor.kCoWhiteColor),
-                  const Spacer(flex: 5),
-                  Text('Cart', style: Theme.of(context).textTheme.headline4),
-                  const Spacer(flex: 7)
-                ],
-              ),
-            ),
+                flex: 3,
+                child: CartHeader(isDark: _settingsCubit(context).isDarkMode)),
             Expanded(
               flex: 14,
               child: BlocBuilder<CartCubit, CartStates>(
@@ -81,15 +60,15 @@ class _CartScreenState extends State<CartScreen> {
                   print('cart screen builder is : ${state.toString()}');
                   if (state is CartLoadingState) const LoadingWidget();
                   print('cartMap Values is : ${cartMap.values.length}');
-
-                  return cartMap.values.isNotEmpty
+                  return cartMap.values.isNotEmpty || cartMap == {}
                       ? ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemCount: _cartCubit(context).cartItemModel.cartMap.length,
                           itemBuilder: (context, index) {
                             final _cartMap = context
                                 .read<CartCubit>()
-                                .cartItemModel.cartMap
+                                .cartItemModel
+                                .cartMap
                                 .values
                                 .toList()[index];
                             return CartItem(
@@ -133,15 +112,40 @@ class _CartScreenState extends State<CartScreen> {
             ),
             CustomElevatedButton(
               text: 'Order Now',
-              onPressed: () {
+              onPressed: () async {
+                await _cartCubit(context).clearCartMap();
                 _productCubit(context).removeAllInCart();
-                _cartCubit(context).clearCartMap();
               },
             ),
             const Spacer(flex: 2),
           ],
         ),
       ),
+    );
+  }
+}
+
+class CartHeader extends StatelessWidget {
+  const CartHeader({
+    super.key,
+    required this.isDark,
+    this.text = 'Cart',
+  });
+
+  final bool isDark;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        BackIosButton(
+            backgroundColor:
+                isDark ? AppColor.kBackButtonColor : AppColor.kCoWhiteColor),
+        const Spacer(flex: 5),
+        Text(text, style: Theme.of(context).textTheme.headline4),
+        const Spacer(flex: 7)
+      ],
     );
   }
 }

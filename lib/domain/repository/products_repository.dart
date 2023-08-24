@@ -22,16 +22,20 @@ class MockProductsRepo extends ProductsRepository {
 
   @override
   Future<HomeModel> getProductsData() async {
-    Response? _response =
-        await DioService.getResponse(url: 'home', authorizationToken: token, lang: en);
+    Response? _response = await DioService.getResponse(
+        url: AppStrings.home,
+        authorizationToken: AppStrings.token,
+        lang: AppStrings.en);
     if (_response?.data != null) _homeModel = HomeModel.fromJson(_response?.data);
     return _homeModel;
   }
 
   @override
   Future<HomeModel> getBannersData() async {
-    Response? _response =
-        await DioService.getResponse(url: 'home', authorizationToken: token, lang: en);
+    Response? _response = await DioService.getResponse(
+        url: AppStrings.home,
+        authorizationToken: AppStrings.token,
+        lang: AppStrings.en);
     if (_response?.data != null) _homeModel = HomeModel.fromJson(_response?.data);
     return _homeModel;
   }
@@ -39,9 +43,9 @@ class MockProductsRepo extends ProductsRepository {
   @override
   Future<FavoriteModel> postChangeFavorite(int? productId) async {
     Response? _response = await DioService.postResponse(
-        url: 'favorites',
-        authorizationToken: token,
-        lang: en,
+        url: AppStrings.favorites,
+        authorizationToken: AppStrings.token,
+        lang: AppStrings.en,
         data: {'product_id': productId});
     FavoriteModel _favoriteModel = FavoriteModel();
     if (_response?.data != null) {
@@ -49,5 +53,4 @@ class MockProductsRepo extends ProductsRepository {
     }
     return _favoriteModel;
   }
-
 }

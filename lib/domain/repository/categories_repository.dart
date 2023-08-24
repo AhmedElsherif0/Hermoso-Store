@@ -12,7 +12,7 @@ class MockCategoriesRepo implements CategoriesRepository {
 
   @override
   Future<CategoriesModel> getCategories() async {
-    Response? response = await DioService.getResponse(url: 'categories', lang: en);
+    Response? response = await DioService.getResponse(url: AppStrings.categories, lang: AppStrings. en);
     CategoriesModel categoriesModel = CategoriesModel.fromJson(response?.data);
 
     return categoriesModel;

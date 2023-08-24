@@ -61,7 +61,7 @@ class _MyAppState extends State<MyApp> {
             create: (context) => SettingsCubit()
               ..getUserProfile()
               ..switchThemeMode(themeMode: widget.isDark)),
-        BlocProvider(create: (context) => _productsCubit..getAllRemoteData()),
+        BlocProvider(create: (context) => _productsCubit..getAllRemoteData()..getFavorites()),
       ],
       child: BlocBuilder<SettingsCubit, SettingsStates>(
         builder: (context, state) {
@@ -94,10 +94,10 @@ class InitializeClass {
     Widget widget = const OnBoardScreen();
     bool? boardScreen = await SharedPref.getData(key: 'BoardScreen');
     print('onboard main Screen ${boardScreen.toString()}');
-    token = await SharedPref.getData(key: 'token');
-    print('main token = ${token.toString()}');
+    AppStrings.token = await SharedPref.getData(key: 'token');
+    print('main token = ${AppStrings.token.toString()}');
     if (boardScreen != null) {
-      token != null && token != ''
+      AppStrings.token != null && AppStrings.token != ''
           ? widget = const HomeScreen()
           : widget = const LoginScreen();
     } else {

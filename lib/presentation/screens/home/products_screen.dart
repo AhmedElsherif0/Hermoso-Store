@@ -35,6 +35,8 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen>
     with SnackBarMixin, AlertDialogMixin {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
@@ -45,8 +47,6 @@ class _ProductsScreenState extends State<ProductsScreen>
       await _productsCubit(context).getProducts();
     }
   }
-
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   void dispose() {
@@ -105,6 +105,10 @@ class _ProductsScreenState extends State<ProductsScreen>
         if (state is ProductsSuccessChangeFavoriteState) {
           showSnackBar(context, ' Product Added to Favorite');
         }
+        if(state is ProductAddedToCartScreenState){
+          final val = state.cartMap.entries.toString();
+          showSnackBar(context, ' Product $val Added to cart');
+        }
       },
       builder: (context, state) {
         if (state is ProductsInitialState) const LoadingWidget();
@@ -122,32 +126,43 @@ class _ProductsScreenState extends State<ProductsScreen>
                       : _productsCubit(context).productSearchList.length,
                   padding: EdgeInsets.all(SizeConfig.getScreenWidth(4)),
                   itemBuilder: (context, index) {
-                    final products = _dataListItem(context).products[index];
-                    return ProductGridItem(
-                        cartIcon: products.isInCart
-                            ? Icons.shopping_cart
-                            : Icons.add_shopping_cart,
-                        onPressCart: () => onCartPressed(products, index),
-                        onPressFavorite: () =>
-                            _productsCubit(context).toggleFavoriteState(products.id),
-                        title: _searchController.text.isNotEmpty
-                            ? _productsCubit(context).productSearchList[index].name
-                            : products.name,
-                        price: _searchController.text.isNotEmpty
-                            ? _productsCubit(context).productSearchList[index].price
-                            : products.price,
-                        oldPrice: _searchController.text.isNotEmpty
-                            ? _productsCubit(context).productSearchList[index].oldPrice
-                            : products.oldPrice,
-                        networkImage: _searchController.text.isNotEmpty
-                            ? _productsCubit(context).productSearchList[index].image
-                            : products.image,
-                        favoriteIcon:
-                            _productsCubit(context).favoriteMap[products.id] == true
-                                ? Icons.star
-                                : Icons.star_border,
-                        onGestureTap: () =>
-                            navigateToProductDetailsScreen(context, index));
+                    final product = _dataListItem(context).products[index];
+                    return BlocBuilder<CartCubit, CartStates>(
+                      builder: (context, state) {
+                        return ProductGridItem(
+                            cartIcon: product.isInCart
+                                ? Icons.shopping_cart
+                                : Icons.add_shopping_cart,
+                            onPressCart: () => onCartPressed(product, index),
+                            onPressFavorite: () => _productsCubit(context)
+                                .toggleFavoriteState(product.id),
+                            title: _searchController.text.isNotEmpty
+                                ? _productsCubit(context).productSearchList[index].name
+                                : product.name,
+                            price: _searchController.text.isNotEmpty
+                                ? _productsCubit(context)
+                                    .productSearchList[index]
+                                    .price
+                                : product.price,
+                            oldPrice: _searchController.text.isNotEmpty
+                                ? _productsCubit(context)
+                                    .productSearchList[index]
+                                    .oldPrice
+                                : product.oldPrice,
+                            networkImage: _searchController.text.isNotEmpty
+                                ? _productsCubit(context)
+                                    .productSearchList[index]
+                                    .image
+                                : product.image,
+                            favoriteIcon:
+                                _productsCubit(context).favoriteMap[product.id] ==
+                                        true
+                                    ? Icons.star
+                                    : Icons.star_border,
+                            onGestureTap: () =>
+                                navigateToProductDetailsScreen(context, index));
+                      },
+                    );
                   },
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -172,11 +187,13 @@ class _ProductsScreenState extends State<ProductsScreen>
   Widget _buildBannersList(BuildContext context) {
     return BlocBuilder<ProductsCubit, ProductsStates>(
       builder: (context, state) {
-        if (state is ProductsInitialState) const LoadingWidget();
+        if (state is ProductsInitialState) return const LoadingWidget();
 
-        if (state is BannersLoadingState) const ShimmerLoading();
+        if (state is BannersLoadingState) return const ShimmerLoading();
 
-        if (state is BannersErrorState) {}
+        if (state is BannersErrorState) {
+          return const Center(child: Text('Something Went wrong'));
+        }
         return _dataListItem(context).banners.isNotEmpty
             ? AnimationSwiper(
                 itemLength: _dataListItem(context).banners.length,
@@ -190,11 +207,9 @@ class _ProductsScreenState extends State<ProductsScreen>
 
   /// add working great
   void onCartPressed(ProductModel products, index) async {
-    await _productsCubit(context).toggleCartIcon(products);
-    _productsCubit(context).toggleProductCartIcon(index);
-    showSnackBar(context, ' Product ${products.id} Added to cart');
-    print(_dataListItem(context).products[index].isInCart);
-    print('cartMap.length ${_cartCubit(context).cartItemModel.cartMap.length}');
+    await context.read<CartCubit>().toggleCartIcon(products);
+     _productsCubit(context).toggleProductCartIcon(index);
+    print('cartMap.length from Product screen ${_cartCubit(context).cartItemModel.cartMap.length}');
   }
 
   void navigateToProductDetailsScreen(context, int index) {
@@ -202,7 +217,7 @@ class _ProductsScreenState extends State<ProductsScreen>
       MaterialPageRoute(
         builder: (context) => BlocProvider.value(
           value: _productsCubit(context),
-          child: ProductDetails(
+            child: ProductDetails(
               index: index, emptySearchList: _searchController.text.isNotEmpty),
         ),
       ),

@@ -37,16 +37,6 @@ class ProductsErrorState extends ProductsStates {
 }
 
 class ProductsSuccessChangeFavoriteState extends ProductsStates {}
-class ProductsCartBadgeState extends ProductsStates {}
-class ProductAddedToCartScreenState extends ProductsStates {}
-class ProductRemovedFromCartScreenState extends ProductsStates {
-  final String? error;
-
-  ProductRemovedFromCartScreenState(this.error);
-}
-
-class ProductsSuccessChangeCartState extends ProductsStates {}
-class ProductsRemoveAllCartState extends ProductsStates {}
 
 class ProductsRestartFavoriteState extends ProductsStates {}
 
@@ -60,7 +50,6 @@ class ProductsSuccessSearchState extends ProductsStates {}
 
 class ProductsLoadingSearchState extends ProductsStates {}
 //***********
-
 
 ///Favorite States......
 class FavoriteSuccessState extends ProductsStates {
@@ -82,11 +71,39 @@ class FavoriteNetworkErrorState extends ProductsStates {
 
   FavoriteNetworkErrorState(this.error);
 }
+
 class FavoriteAddItemState extends ProductsStates {}
+
 class FavoriteRemoveItemState extends ProductsStates {}
+
 class FavoritesSuccessSearchState extends ProductsStates {}
 //********
 ///  Cart States...
 
-class ProductCartAddedToCartScreenState extends ProductsStates {}
 class ProductCartLoadingState extends ProductsStates {}
+
+class ProductsCartIconChanged extends ProductsStates {}
+
+class ProductsCartBadgeState extends ProductsStates {}
+
+class ProductAddedToCartScreenState extends ProductsStates {
+  final Map<int, CartItemModel> cartMap;
+
+  ProductAddedToCartScreenState(this.cartMap);
+}
+
+class ProductRemovedFromCartScreenState extends ProductsStates {
+  final String? error;
+
+  ProductRemovedFromCartScreenState(this.error);
+}
+
+class ProductsSuccessChangeCartState extends ProductsStates {}
+
+class ProductsClearAllCartState extends ProductsStates {}
+
+class ProductsErrorRemoveCartItem extends ProductsStates {
+  final String? error;
+
+  ProductsErrorRemoveCartItem(this.error);
+}
