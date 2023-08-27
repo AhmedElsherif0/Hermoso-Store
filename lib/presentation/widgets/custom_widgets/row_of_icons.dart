@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:hermoso_store/utils/colors.dart';
 import 'package:sizer/sizer.dart';
@@ -11,11 +10,13 @@ class RowOfIcons extends StatelessWidget {
     required this.onPressFavorite,
     required this.onPressCart,
     required this.value,
+    required this.isDarK,
   }) : super(key: key);
 
   final void Function() onPressFavorite;
   final void Function() onPressCart;
   final int value;
+  final bool isDarK;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,11 @@ class RowOfIcons extends StatelessWidget {
         Expanded(
           flex: 5,
           child: CartBadge(
-            color: value != 0 ? AppColor.red : AppColor.kWhiteColor,
+            color: value != 0
+                ? AppColor.red
+                : isDarK
+                    ? AppColor.kDarkGreyColor
+                    : AppColor.kWhiteColor,
             value: value,
             widget: IconButton(
               padding: EdgeInsets.zero,

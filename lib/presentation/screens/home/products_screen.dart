@@ -72,6 +72,7 @@ class _ProductsScreenState extends State<ProductsScreen>
         ),
         widget2: BlocBuilder<CartCubit, CartStates>(
           builder: (context, state) => RowOfIcons(
+            isDarK: _settingsCubit(context).isDarkMode,
             value: _cartCubit(context).cartItemModel.cartMap.length,
             onPressCart: () => Navigator.pushNamed(context, CartScreen.routeName),
             onPressFavorite: () =>
@@ -182,7 +183,7 @@ class _ProductsScreenState extends State<ProductsScreen>
 
   HomeData _dataListItem(context) => _productsCubit(context).homeModel.data;
 
-  _settingsCubit(context) => BlocProvider.of<SettingsCubit>(context);
+  SettingsCubit _settingsCubit(context) => BlocProvider.of<SettingsCubit>(context);
 
   Widget _buildBannersList(BuildContext context) {
     return BlocBuilder<ProductsCubit, ProductsStates>(
